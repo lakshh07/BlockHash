@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Miriam+Libre:wght@400;700&family=Montserrat:wght@400;500;600;700;800&family=Philosopher&family=Raleway:wght@400;500;600;700&display=swap");
+
 html,
 body {
   padding: 0;
@@ -8,9 +10,22 @@ body {
 
 a {
   color: inherit;
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 * {
   box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+
+.brand {
+  background-image: linear-gradient(
+    to right,
+    #7c3aed,
+    #db2777,
+    rgba(124, 58, 237, 0)
+  ) !important;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
 }
