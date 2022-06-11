@@ -16,7 +16,7 @@ function SearchProfileBox({ query }) {
   });
   // console.log(result?.data?.search?.items[0]?.name);
 
-  if (!result?.data?.search?.items.length && query.length) {
+  if (!result?.data?.search?.items?.length && query?.length) {
     return (
       <Box
         mt={"5px"}
@@ -36,7 +36,7 @@ function SearchProfileBox({ query }) {
     );
   }
 
-  if (result?.data?.search?.items.length) {
+  if (result?.data?.search?.items?.length) {
     return (
       <>
         <Box
@@ -57,7 +57,7 @@ function SearchProfileBox({ query }) {
               <Spinner color="#0177FF" />
             </Box>
           ) : result ? (
-            result.data.search.items.map((list, index) => {
+            result?.data?.search?.items?.map((list, index) => {
               return (
                 <Link key={index} href="/">
                   <Box

@@ -102,7 +102,7 @@ function Blogs({ publications }) {
                 </Flex>
                 <BsDot color={"grey"} />
                 <Text fontSize={"14px"} color={"grey"}>
-                  {moment(list.createdAt).fromNow()}
+                  {moment(new Date(list.createdAt)).fromNow()}
                 </Text>
               </Flex>
               <Text fontSize={"14px"} className={"brand"}>
@@ -129,7 +129,7 @@ function Blogs({ publications }) {
                   fontWeight={400}
                   fontSize={"16px"}
                 >
-                  {fetchContent(list.metadata.content)}
+                  {list.metadata.content && fetchContent(list.metadata.content)}
                   {content?.description
                     ? `${htmlFrom(content?.description?.substring(0, 200))}....`
                     : `${htmlFrom(content?.content?.substring(0, 200))}...`}

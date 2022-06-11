@@ -120,7 +120,8 @@ function BlogView() {
             textAlign={"center"}
             mb={"1.5em"}
           >
-            {fetchContent(result?.data?.publication?.metadata?.content)}
+            {result?.data?.publication?.metadata?.content &&
+              fetchContent(result?.data?.publication?.metadata?.content)}
             {content?.subtitle && content?.subtitle}
           </Heading>
 
@@ -171,9 +172,9 @@ function BlogView() {
             </Box>
             <BsDot style={{ marginRight: "0.5em", marginLeft: "0.5em" }} />
             <Text fontSize={"16px"} color={"blackAlpha.800"}>
-              {moment(`${result?.data?.publication?.createdAt}`).format(
-                "MMMM Do YYYY"
-              )}
+              {moment(
+                new Date(`${result?.data?.publication?.createdAt}`)
+              ).format("MMMM DD YYYY")}
             </Text>
             {result?.data?.publication?.profile?.ownedBy === data?.address && (
               <Flex alignItems={"center"}>
@@ -261,7 +262,8 @@ function BlogView() {
             maxW={"1000px"}
             className={"blogContent"}
           >
-            {fetchContent(result?.data?.publication?.metadata?.content)}
+            {result?.data?.publication?.metadata?.content &&
+              fetchContent(result?.data?.publication?.metadata?.content)}
             {htmlFrom(content?.content)}
           </Box>
         </Box>

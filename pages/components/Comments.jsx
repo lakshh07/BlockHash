@@ -155,9 +155,9 @@ function Comments({ result }) {
           </Flex>
           <Box>
             <Text fontSize={"16px"} color={"blackAlpha.800"}>
-              {moment(`${result?.data?.publication?.createdAt}`).format(
-                "MMMM Do YYYY"
-              )}
+              {moment(
+                new Date(`${result?.data?.publication?.createdAt}`)
+              ).format("MMMM DD YYYY")}
             </Text>
           </Box>
         </Flex>
