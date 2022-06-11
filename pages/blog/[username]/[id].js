@@ -1,10 +1,10 @@
 import React from "react";
-import Feed from "./Feed";
+import BlogView from "./BlogView";
 
 function index() {
   return (
     <>
-      <Feed />
+      <BlogView />
     </>
   );
 }

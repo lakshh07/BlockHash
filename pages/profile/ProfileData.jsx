@@ -6,8 +6,20 @@ import { BiEditAlt } from "react-icons/bi";
 import Blogs from "./components/Blogs";
 import Comments from "./components/Comments";
 import Nfts from "./components/Nfts";
+import { getUsersNfts } from "../api";
+import { useQuery } from "urql";
 
-function ProfileData() {
+function ProfileData({ publications, profile }) {
+  const [result] = useQuery({
+    query: getUsersNfts,
+    variables: {
+      request: {
+        ownerAddress: profile?.ownedBy,
+        chainIds: [80001],
+      },
+    },
+  });
+  console.log(result);
   return (
     <>
       <Box mt={"2em"}>
@@ -15,7 +27,7 @@ function ProfileData() {
           <TabList>
             <Tab fontWeight="600" _focus={{ border: "none" }}>
               <BiEditAlt style={{ marginRight: "7px", fontWeight: "600" }} />
-              Blogs (2)
+              Blogs ({publications?.length})
             </Tab>
             <Tab fontWeight="600" _focus={{ border: "none" }} mx={"10px"}>
               <TbMessages style={{ marginRight: "7px", fontWeight: "600" }} />
@@ -25,19 +37,19 @@ function ProfileData() {
               <AiOutlinePicture
                 style={{ marginRight: "7px", fontWeight: "600" }}
               />
-              NFTs (5)
+              NFTs ({result?.data?.nfts?.items?.length})
             </Tab>
           </TabList>
 
-          <TabPanels mt={"1em"}>
+          <TabPanels mt={"2em"}>
             <TabPanel>
-              <Blogs />
+              <Blogs publications={publications} />
             </TabPanel>
             <TabPanel>
               <Comments />
             </TabPanel>
             <TabPanel>
-              <Nfts />
+              <Nfts nfts={result} />
             </TabPanel>
           </TabPanels>
         </Tabs>

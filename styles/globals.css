@@ -9,13 +9,13 @@ body {
 }
 
 a {
-  color: inherit;
+  color: inherit !important;
   text-decoration: none !important;
 }
 
 * {
   box-sizing: border-box;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Miriam Libre", sans-serif;
 }
 
 .brand {
@@ -28,4 +28,158 @@ a {
   color: transparent;
   -webkit-background-clip: text;
   background-clip: text;
+}
+.hero {
+  /* Created with https://www.css-gradient.com */
+  background-image: url(../public/assets/home-banner.png) !important;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.blur-box {
+  width: 97%;
+  margin: 0 auto;
+  height: 100%;
+  backdrop-filter: blur(0.5px) !important ;
+}
+.blur {
+  width: 100%;
+  filter: blur(30px);
+  height: 100%;
+}
+.h-shadow {
+  filter: drop-shadow(rgba(0, 0, 0, 0.15) 0px 5px 3px) !important;
+}
+.loading-bar {
+  width: 130px;
+  height: 2px;
+  background: #cfcfcf;
+  margin-top: 22px;
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-bar::before {
+  content: "";
+  width: 68px;
+  height: 2px;
+  background: #000;
+  position: absolute;
+  left: -34px;
+  animation: bluebar 1.5s infinite ease;
+}
+
+@keyframes bluebar {
+  50% {
+    left: 96px;
+  }
+}
+
+.blogContent p {
+  display: block;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  font-size: 18px;
+  margin-left: 0;
+  margin-right: 0;
+  font-family: "Montserrat" !important;
+}
+
+.blogContent h1 {
+  display: block;
+  font-size: 2em;
+  margin-top: 0.67em;
+  margin-bottom: 0.67em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+  font-family: "Montserrat" !important;
+}
+.blogContent h2 {
+  display: block;
+  font-size: 1.5em;
+  margin-top: 0.83em;
+  margin-bottom: 0.83em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+  font-family: "Montserrat" !important;
+}
+.blogContent h3 {
+  display: block;
+  font-size: 1.17em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+  font-family: "Montserrat" !important;
+}
+.blogContent h4 {
+  display: block;
+  margin-top: 1.33em;
+  margin-bottom: 1.33em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+  font-family: "Montserrat" !important;
+}
+.blogContent h5 {
+  display: block;
+  font-size: 0.83em;
+  margin-top: 1.67em;
+  margin-bottom: 1.67em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+  font-family: "Montserrat" !important;
+}
+.blogContent h6 {
+  display: block;
+  font-size: 0.67em;
+  margin-top: 2.33em;
+  margin-bottom: 2.33em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+  font-family: "Montserrat" !important;
+}
+.blogContent ul {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  list-style: disc outside none;
+}
+
+.blogContent li {
+  margin-left: 2em;
+  display: list-item;
+  text-align: -webkit-match-parent;
+  padding-top: 10px;
+  font-size: 18px;
+  font-family: "Montserrat" !important;
+}
+.blogContent blockquote {
+  display: block;
+  background: rgb(245, 245, 245);
+  margin-top: 2em;
+  border-left: 10px solid #e4e7eb;
+  margin-bottom: 1em;
+  margin-left: 40px;
+  margin-right: 40px;
+  padding: 0.1em 10px;
+}
+.blogContent code {
+  border-radius: 0.25rem;
+  font-weight: 400 !important;
+  padding: 0.25rem;
+  --tw-text-opacity: 1;
+  color: rgba(0, 0, 0, var(--tw-text-opacity));
+  font-size: 80%;
+  background: #f0efed;
+}
+.ant-select-dropdown {
+  display: none !important;
+}
+.ptabs {
+  justify-content: left !important;
 }

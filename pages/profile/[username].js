@@ -1,10 +1,10 @@
 import React from "react";
-import Feed from "./Feed";
+import ProfileView from "./ProfileView";
 
 function index() {
   return (
     <>
-      <Feed />
+      <ProfileView />
     </>
   );
 }

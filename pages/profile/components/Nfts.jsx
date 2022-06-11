@@ -3,51 +3,25 @@ import {
   Flex,
   Heading,
   Link,
-  SkeletonCircle,
-  SkeletonText,
   Text,
   Wrap,
   WrapItem,
+  Image,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React from "react";
 
-function Nfts() {
-  const [dataLoading, setDataLoading] = useState(true);
-  const nftData = [
-    {
-      name: "Ethereum Name Service",
-      title: "Polygon Buidlit",
-      image: "profile.png",
-    },
-    {
-      name: "Ethereum Name Service",
-      title: "wongmjane.lens's follower NFT",
-      image: "profile.png",
-    },
-    {
-      name: "Ethereum Name Service",
-      title: "2021 Championship Chain",
-      image: "profile.png",
-    },
-    {
-      name: "Ethereum Name Service",
-      title: "Polygon Buidlit",
-      image: "profile.png",
-    },
-    {
-      name: "Ethereum Name Service",
-      title: "2021 Championship Chain",
-      image: "profile.png",
-    },
-  ];
-
+function Nfts({ nfts }) {
   return (
     <>
-      {dataLoading ? (
+      {nfts?.data?.nfts?.items?.length ? (
         <Wrap spacing={"40px"} p="20px 30px">
-          {nftData.map((list, index) => {
+          {nfts?.data?.nfts?.items.map((list, index) => {
             return (
-              <Link href="#" key={index} isExternal>
+              <Link
+                href={`https://testnets.opensea.io/assets/mumbai/${list.contractAddress}/${list.tokenId}`}
+                key={index}
+                isExternal
+              >
                 <WrapItem key={index}>
                   <Box
                     px="25px"
@@ -62,7 +36,11 @@ function Nfts() {
                       w={"220px"}
                       h={"220px"}
                       borderRadius={"10px"}
-                      backgroundImage={`/assets/${list.image}`}
+                      backgroundImage={
+                        list.originalContent?.uri
+                          ? list.originalContent?.uri
+                          : "/assets/bright-squares.png"
+                      }
                       backgroundPosition={"center"}
                       backgroundRepeat={"no-repeat"}
                       backgroundSize={"cover"}
@@ -75,7 +53,9 @@ function Nfts() {
                       color={"grey"}
                       textAlign={"left"}
                     >
-                      {list.name}
+                      {list.collectionName
+                        ? list.collectionName
+                        : list.contractAddress}
                     </Text>
                     <Text
                       textAlign={"left"}
@@ -83,7 +63,7 @@ function Nfts() {
                       fontWeight={700}
                       fontSize={"16px"}
                     >
-                      {list.title}
+                      {list.name ? list.name : list.tokenId}
                     </Text>
                   </Box>
                 </WrapItem>
@@ -92,28 +72,16 @@ function Nfts() {
           })}
         </Wrap>
       ) : (
-        <Flex>
-          <Box
-            padding="6"
-            maxW={"270px"}
-            align={"center"}
-            boxShadow="lg"
-            bg="white"
-            mr="40px"
-          >
-            <SkeletonCircle size="40" />
-            <SkeletonText mt="4" noOfLines={3} spacing="4" />
-          </Box>
-          <Box
-            padding="6"
-            maxW={"270px"}
-            align={"center"}
-            boxShadow="lg"
-            bg="white"
-          >
-            <SkeletonCircle size="40" />
-            <SkeletonText mt="4" noOfLines={3} spacing="4" />
-          </Box>
+        <Flex
+          mt="5em"
+          justifyContent="center"
+          flexDir="column"
+          alignItems="center"
+        >
+          <Image src={"/assets/no-results.png"} height={100} width={100} />
+          <Heading fontSize="1.5em" fontFamily={"Miriam Libre"} pt="1em">
+            No NFTs
+          </Heading>
         </Flex>
       )}
     </>
