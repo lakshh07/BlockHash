@@ -63,41 +63,54 @@ function CreateProfile({ isOpen, onClose, setUserProfile, setProfile }) {
                 pointerEvents="none"
                 color="gray.300"
                 fontSize="1.2em"
-                children="@"
-              />
+              >
+                <Text>@</Text>
+              </InputLeftElement>
               <Input
                 autoFocus
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="enter unique handle"
               />
-              <InputRightElement
-                children={
-                  !result?.data?.search?.items?.length && query?.length ? (
-                    <AiOutlineCheck color="green" />
-                  ) : result?.data?.search?.items?.length ? (
-                    <MdDoNotDisturb color="red" />
-                  ) : result?.fetching ? (
-                    <Spinner color="purple.500" size={"sm"} />
-                  ) : null
-                }
-              />
+              <InputRightElement>
+                {!result?.data?.search?.items?.length && query?.length ? (
+                  <AiOutlineCheck color="green" />
+                ) : result?.data?.search?.items?.length ? (
+                  <MdDoNotDisturb color="red" />
+                ) : result?.fetching ? (
+                  <Spinner color="purple.500" size={"sm"} />
+                ) : null}
+              </InputRightElement>
             </InputGroup>
             <Flex py={"1em"} alignItems={"center"}>
-              <Text
-                fontFamily={"Montserrat"}
-                fontSize={"12px"}
-                ml={"10px"}
-                color={"grey"}
-              >
-                {!result?.data?.search?.items?.length && query?.length
-                  ? `Congo! 🎉  Available`
-                  : result?.data?.search?.items?.length
-                  ? "Not Available 😢. Try Again!"
-                  : result?.fetching
-                  ? "Checking availability.."
-                  : null}
-              </Text>
+              {!result?.data?.search?.items?.length && query?.length ? (
+                <Text
+                  fontFamily={"Montserrat"}
+                  fontSize={"12px"}
+                  ml={"10px"}
+                  color={"grey"}
+                >
+                  Congo! 🎉 &nbsp;Available
+                </Text>
+              ) : result?.data?.search?.items?.length ? (
+                <Text
+                  fontFamily={"Montserrat"}
+                  fontSize={"12px"}
+                  ml={"10px"}
+                  color={"grey"}
+                >
+                  Not Available 😢. Try Again!
+                </Text>
+              ) : result?.fetching ? (
+                <Text
+                  fontFamily={"Montserrat"}
+                  fontSize={"12px"}
+                  ml={"10px"}
+                  color={"grey"}
+                >
+                  Checking availability..
+                </Text>
+              ) : null}
             </Flex>
           </ModalBody>
 

@@ -1,6 +1,5 @@
 import "../styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
-
 import "antd/dist/antd.css";
 import React, { useState } from "react";
 import { Box, ChakraProvider } from "@chakra-ui/react";
@@ -51,14 +50,10 @@ function MyApp({ Component, pageProps }) {
                       content="width=device-width, initial-scale=1.0"
                     />
                     <title>BlockHash</title>
+                    <link rel="icon" href="/favicon.ico" />
                     <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
                     <meta name="theme-color" content="#1111" />
                     <meta name="author" content="Lakshay Maini" />
-                    <link
-                      rel="shortcut icon"
-                      type="image/gif"
-                      href="/logo.gif"
-                    />
                   </Head>
                   <Loading />
                   <Box className={loading ? "blur" : null}>

@@ -10,6 +10,7 @@ import {
   Heading,
   Image,
   Input,
+  Link,
   Spinner,
   Text,
   Textarea,
@@ -23,6 +24,7 @@ import { createComment } from "../../helpers/comment";
 import { useAccount, useSigner } from "wagmi";
 import { getComments } from "../api";
 import { useQuery } from "urql";
+import { useProfileContext } from "../../context/profile";
 
 function Comments({ pubData }) {
   const [content, setContent] = useState("");
@@ -30,6 +32,7 @@ function Comments({ pubData }) {
   const toast = useToast();
   const { data } = useAccount();
   const { data: signer } = useSigner();
+  const { userProfile } = useProfileContext();
 
   const [result] = useQuery({
     query: getComments,
@@ -37,13 +40,13 @@ function Comments({ pubData }) {
       request: { commentsOf: pubData?.data?.publication?.id },
     },
   });
-
+  // console.log(userProfile);
   async function postComment() {
     setChecker(true);
     const description = "BlockHash blog comment";
     console.log(content);
     const result = await createComment(
-      pubData?.data?.publication?.profile?.id,
+      userProfile?.id,
       pubData?.data?.publication?.id,
       data?.address,
       signer,
@@ -61,6 +64,9 @@ function Comments({ pubData }) {
       position: "top",
     });
     setChecker(false);
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
   }
   return (
     <>
@@ -111,28 +117,29 @@ function Comments({ pubData }) {
               p={"0.5em 1.5em 1.5em"}
             >
               <Box align={"right"} position={"relative"}>
-                <Flex mt={"10px"} mb={"1.5em"} alignItems={"center"}>
-                  <Image
-                    src={
-                      pubData?.data?.publication?.profile?.picture
-                        ? pubData?.data?.publication?.profile?.picture?.original
-                            ?.url
-                        : `/assets/man.png`
-                    }
-                    height={45}
-                    width={45}
-                    style={{ borderRadius: "50%" }}
-                  />
-                  <Text
-                    ml={"10px"}
-                    flex={1}
-                    textAlign={"left"}
-                    fontSize={"14px"}
-                    className={"brand"}
-                  >
-                    {`@${pubData?.data?.publication?.profile?.handle}`}
-                  </Text>
-                </Flex>
+                <Link href={`/profile/${userProfile?.handle}`}>
+                  <Flex mt={"10px"} mb={"1.5em"} alignItems={"center"}>
+                    <Image
+                      src={
+                        userProfile?.picture
+                          ? userProfile?.picture?.original?.url
+                          : `/assets/man.png`
+                      }
+                      height={45}
+                      width={45}
+                      style={{ borderRadius: "50%" }}
+                    />
+                    <Text
+                      ml={"10px"}
+                      flex={1}
+                      textAlign={"left"}
+                      fontSize={"14px"}
+                      className={"brand"}
+                    >
+                      {`@${userProfile?.handle}`}
+                    </Text>
+                  </Flex>
+                </Link>
                 <Textarea
                   variant={"unstyled"}
                   placeholder="Tell something cool"
@@ -179,42 +186,39 @@ function Comments({ pubData }) {
               key={index}
             >
               <Flex justifyContent={"space-between"}>
-                <Flex flex={1} alignItems={"center"}>
-                  <Image
-                    src={
-                      list?.profile?.picture
-                        ? list?.profile?.picture?.original?.url
-                        : `/assets/man.png`
-                    }
-                    height={45}
-                    width={45}
-                    style={{ borderRadius: "50%" }}
-                  />
-                  <Box ml={"10px"} flex={1}>
-                    <Flex alignItems={"center"}>
-                      <Flex alignItems={"center"}>
-                        <Text
-                          fontWeight={600}
-                          textTransform={"capitalize"}
-                          fontSize={"16px"}
-                          textAlign={"left"}
-                        >
-                          {list?.profile?.name
-                            ? list?.profile?.name
-                            : "Anonymous"}
-                        </Text>
-                      </Flex>
-                    </Flex>
-                    <Text
-                      flex={1}
-                      textAlign={"left"}
-                      fontSize={"14px"}
-                      className={"brand"}
-                    >
-                      {`@${list?.profile?.handle}`}
-                    </Text>
-                  </Box>
-                </Flex>
+                <Link href={`/profile/${list?.profile?.handle}`}>
+                  <Flex alignItems={"center"}>
+                    <Image
+                      src={
+                        list?.profile?.picture
+                          ? list?.profile?.picture?.original?.url
+                          : `/assets/man.png`
+                      }
+                      height={45}
+                      width={45}
+                      style={{ borderRadius: "50%" }}
+                    />
+                    <Box ml={"10px"} w={"300px"}>
+                      <Text
+                        fontWeight={600}
+                        textTransform={"capitalize"}
+                        fontSize={"16px"}
+                        textAlign={"left"}
+                      >
+                        {list?.profile?.name
+                          ? list?.profile?.name
+                          : "Anonymous"}
+                      </Text>
+                      <Text
+                        textAlign={"left"}
+                        fontSize={"14px"}
+                        className={"brand"}
+                      >
+                        {`@${list?.profile?.handle}`}
+                      </Text>
+                    </Box>
+                  </Flex>
+                </Link>
                 <Box>
                   <Text fontSize={"16px"} color={"blackAlpha.800"}>
                     {moment(new Date(`${list?.createdAt}`)).fromNow()}

@@ -110,6 +110,15 @@ function ProfileView(props) {
   async function followRequest() {
     try {
       const txHash = await follow(profile?.id, data?.address, signer);
+      txHash &&
+        toast({
+          title: "Success",
+          description: `indexing your transaction`,
+          status: "success",
+          duration: 4000,
+          isClosable: false,
+          position: "top",
+        });
       const approve = await approveFollow(data?.address);
       approve &&
         toast({
@@ -122,7 +131,7 @@ function ProfileView(props) {
         });
       setTimeout(() => {
         window.location.reload();
-      }, 4000);
+      }, 5000);
     } catch (error) {
       console.log(error);
     }
