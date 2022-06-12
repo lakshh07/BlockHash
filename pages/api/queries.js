@@ -1675,6 +1675,363 @@ const getDefaultProfile = `
   }
 `;
 
+const getComments = `
+  query CommentFeed($request: PublicationsQueryRequest!) {
+    publications(request: $request) {
+      items {
+        ... on Comment {
+          ...CommentFields
+        }
+      }
+      pageInfo {
+        totalCount
+        next
+      }
+    }
+  }
+  fragment CommentFields on Comment {
+    id
+    profile {
+      ...MinimalProfileFields
+    }
+    collectedBy {
+      address
+      defaultProfile {
+        handle
+      }
+    }
+    collectModule {
+      ...MinimalCollectModuleFields
+    }
+    stats {
+      ...StatsFields
+    }
+    metadata {
+      ...MetadataFields
+    }
+    commentOn {
+      ... on Post {
+        pubId: id
+        profile {
+          ...MinimalProfileFields
+        }
+        collectedBy {
+          address
+          defaultProfile {
+            handle
+          }
+        }
+        collectModule {
+          ...MinimalCollectModuleFields
+        }
+        stats {
+          ...StatsFields
+        }
+        metadata {
+          ...MetadataFields
+        }
+        hidden
+        createdAt
+      }
+      ... on Comment {
+        id
+        profile {
+          ...MinimalProfileFields
+        }
+        collectedBy {
+          address
+          defaultProfile {
+            handle
+          }
+        }
+        collectModule {
+          ...MinimalCollectModuleFields
+        }
+        metadata {
+          ...MetadataFields
+        }
+        stats {
+          ...StatsFields
+        }
+        mainPost {
+          ... on Post {
+            id
+            profile {
+              ...MinimalProfileFields
+            }
+            collectedBy {
+              address
+              defaultProfile {
+                handle
+              }
+            }
+            collectModule {
+              ...MinimalCollectModuleFields
+            }
+            stats {
+              ...StatsFields
+            }
+            metadata {
+              ...MetadataFields
+            }
+            hidden
+            createdAt
+          }
+          ... on Mirror {
+            id
+            profile {
+              ...MinimalProfileFields
+            }
+            collectModule {
+              ...MinimalCollectModuleFields
+            }
+            stats {
+              ...StatsFields
+            }
+            metadata {
+              ...MetadataFields
+            }
+            mirrorOf {
+              ... on Post {
+                id
+                profile {
+                  ...MinimalProfileFields
+                }
+                stats {
+                  ...StatsFields
+                }
+                hidden
+              }
+              ... on Comment {
+                id
+                profile {
+                  ...MinimalProfileFields
+                }
+                stats {
+                  ...StatsFields
+                }
+                hidden
+              }
+            }
+            createdAt
+          }
+        }
+        hidden
+        createdAt
+      }
+      ... on Mirror {
+        id
+        profile {
+          ...MinimalProfileFields
+        }
+        metadata {
+          ...MetadataFields
+        }
+        mirrorOf {
+          ... on Post {
+            id
+            profile {
+              ...MinimalProfileFields
+            }
+            stats {
+              ...StatsFields
+            }
+            hidden
+          }
+          ... on Comment {
+            id
+            profile {
+              ...MinimalProfileFields
+            }
+            stats {
+              ...StatsFields
+            }
+            hidden
+          }
+        }
+        stats {
+          ...StatsFields
+        }
+        hidden
+        createdAt
+      }
+    }
+    hidden
+    createdAt
+    appId
+  }
+  fragment MinimalCollectModuleFields on CollectModule {
+    ... on FreeCollectModuleSettings {
+      type
+    }
+    ... on FeeCollectModuleSettings {
+      type
+      amount {
+        asset {
+          address
+        }
+      }
+    }
+    ... on LimitedFeeCollectModuleSettings {
+      type
+      amount {
+        asset {
+          address
+        }
+      }
+    }
+    ... on LimitedTimedFeeCollectModuleSettings {
+      type
+      amount {
+        asset {
+          address
+        }
+      }
+    }
+    ... on TimedFeeCollectModuleSettings {
+      type
+      amount {
+        asset {
+          address
+        }
+      }
+    }
+  }
+  fragment MetadataFields on MetadataOutput {
+    name
+    description
+    content
+    media {
+      original {
+        url
+        mimeType
+      }
+    }
+    attributes {
+      value
+    }
+  }
+  fragment MinimalProfileFields on Profile {
+    id
+    name
+    handle
+    bio
+    ownedBy
+    attributes {
+      key
+      value
+    }
+    picture {
+      ... on MediaSet {
+        original {
+          url
+        }
+      }
+      ... on NftImage {
+        uri
+      }
+    }
+    followModule {
+      __typename
+    }
+  }
+  fragment StatsFields on PublicationStats {
+    totalAmountOfMirrors
+    totalAmountOfCollects
+    totalAmountOfComments
+  }
+`;
+
+const getProfileById = `
+  query Profiles($id: ProfileId!) {
+    profiles(request: { profileIds: [$id]}) {
+      items {
+        id
+        name
+        bio
+        attributes {
+          displayType
+          traitType
+          key
+          value
+        }
+        metadata
+        isDefault
+        picture {
+          ... on NftImage {
+            contractAddress
+            tokenId
+            uri
+            verified
+          }
+          ... on MediaSet {
+            original {
+              url
+              mimeType
+            }
+          }
+          __typename
+        }
+        handle
+        coverPicture {
+          ... on NftImage {
+            contractAddress
+            tokenId
+            uri
+            verified
+          }
+          ... on MediaSet {
+            original {
+              url
+              mimeType
+            }
+          }
+          __typename
+        }
+        ownedBy
+        dispatcher {
+          address
+          canUseRelay
+        }
+        stats {
+          totalFollowers
+          totalFollowing
+          totalPosts
+          totalComments
+          totalMirrors
+          totalPublications
+          totalCollects
+        }
+        followModule {
+          ... on FeeFollowModuleSettings {
+            type
+            amount {
+              asset {
+                symbol
+                name
+                decimals
+                address
+              }
+              value
+            }
+            recipient
+          }
+          ... on ProfileFollowModuleSettings {
+           type
+          }
+          ... on RevertFollowModuleSettings {
+           type
+          }
+        }
+      }
+      pageInfo {
+        prev
+        next
+        totalCount
+      }
+    }
+  }
+`;
 /*
  * const doesFollowRequest = {
  *   followInfos: [{ followerAddress: EthereumAddress!, profileId: ProfileId! }]
@@ -1685,9 +2042,11 @@ export {
   recommendProfiles,
   getProfiles,
   getProfileByHandle,
+  getProfileById,
   getDefaultProfile,
   getPublications,
   getPublication,
+  getComments,
   searchProfiles,
   searchPublications,
   explorePublications,

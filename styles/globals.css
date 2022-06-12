@@ -68,7 +68,10 @@ a {
   left: -34px;
   animation: bluebar 1.5s infinite ease;
 }
-
+p,
+h2 {
+  margin-bottom: 0 !important;
+}
 @keyframes bluebar {
   50% {
     left: 96px;

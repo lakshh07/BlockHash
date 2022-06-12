@@ -13,8 +13,9 @@ import {
   MenuGroup,
   MenuItem,
   MenuList,
-  Tag,
   Text,
+  useToast,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -25,22 +26,23 @@ import { useLoadingContext } from "../../context/loading";
 import Lottie from "react-lottie";
 import logo from "../../public/assets/logo/logo.json";
 import { login } from "../../helpers/login";
-import { createProfile } from "../../helpers/createProfile";
 import { getDefaultProfile } from "../../helpers/getDefaultProfile";
-import { setDefaultProfile } from "../../helpers/setDefaultProfile";
 import { useProfileContext } from "../../context/profile";
 import SearchProfileBox from "./SearchProfileBox";
 import { AiOutlineSetting } from "react-icons/ai";
 import { BsPerson } from "react-icons/bs";
+import CreateProfile from "./CreateProfile";
 
 function Navbar({}) {
   const [profile, setProfile] = useState("a");
   const [query, setQuery] = useState("");
-  const { data: signer } = useSigner();
+  const [checker, setChecker] = useState(false);
   const { data } = useAccount();
   const router = useRouter();
   const { setLoading } = useLoadingContext();
   const { setUserProfile, userProfile } = useProfileContext();
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const defaultOptions2 = {
     loop: true,
@@ -50,6 +52,7 @@ function Navbar({}) {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
+
   const handleRouteChange = async () => {
     // await login(data?.address);
     const pData = await getDefaultProfile(data?.address);
@@ -64,8 +67,8 @@ function Navbar({}) {
   if (router.asPath == "/blog/[username]/[id]") {
     handleRouteChange();
   }
-  if (router.asPath == "/setting") {
-    // handleRouteChange();
+  if (router.asPath == "/setting/[id]") {
+    handleRouteChange();
   }
 
   function updateSearch(e) {
@@ -100,7 +103,7 @@ function Navbar({}) {
                 </Heading>
               </Flex>
             </Link>
-            <Box>
+            <Box position={"relative"}>
               <Input
                 // zIndex={"99"}
                 variant={"filled"}
@@ -156,33 +159,48 @@ function Navbar({}) {
               </Button>
             )}
 
-            {!userProfile && (
-              <Button
-                ml={"1em"}
-                leftIcon={<LensLogo size={30} color="white" />}
-                iconSpacing={["marginTop"]}
-                alignItems={"center"}
-                boxShadow="rgba(100, 100, 111, 0.4) 0px 7px 29px 0px"
-                rounded="20px"
-                p="1.2em"
-                bg="#0177FF"
-                color="white"
-                _hover={{
-                  bg: "#0177FF",
-                  top: "-2px",
-                  boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-                }}
-                pointerEvents={userProfile?.handle ? "none" : "all"}
-                onClick={async () => {
-                  await login(data?.address);
-                  const pData = await getDefaultProfile(data?.address);
-                  setProfile(pData);
-                  setUserProfile(pData.defaultProfile);
-                }}
-              >
-                {userProfile ? userProfile?.handle : `Login`}
-              </Button>
-            )}
+            {profile === "no default"
+              ? null
+              : !userProfile && (
+                  <Button
+                    ml={"1em"}
+                    leftIcon={<LensLogo size={30} color="white" />}
+                    iconSpacing={["marginTop"]}
+                    alignItems={"center"}
+                    boxShadow="rgba(100, 100, 111, 0.4) 0px 7px 29px 0px"
+                    rounded="20px"
+                    p="1.2em"
+                    bg="#0177FF"
+                    color="white"
+                    _hover={{
+                      bg: "#0177FF",
+                      top: "-2px",
+                      boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                    }}
+                    isLoading={checker}
+                    pointerEvents={userProfile?.handle ? "none" : "all"}
+                    onClick={async () => {
+                      setChecker(true);
+                      await login(data?.address);
+                      const pData = await getDefaultProfile(data?.address);
+                      setUserProfile(pData.defaultProfile);
+                      if (pData.defaultProfile == null) {
+                        setProfile("no default");
+                        toast({
+                          title: "No Profile Found!",
+                          description: "Create free on testnet.",
+                          status: "error",
+                          duration: 5000,
+                          isClosable: false,
+                          position: "top",
+                        });
+                      }
+                      setChecker(false);
+                    }}
+                  >
+                    {userProfile ? userProfile?.handle : `Login`}
+                  </Button>
+                )}
 
             {userProfile?.handle && (
               <Flex alignItems={"center"}>
@@ -240,7 +258,7 @@ function Navbar({}) {
                         <Text fontFamily={"Montserrat"}>Your Profile</Text>
                       </MenuItem>
                     </Link>
-                    <Link href={`/setting`}>
+                    <Link href={`/setting/${userProfile?.id}`}>
                       <MenuItem icon={<AiOutlineSetting />}>
                         <Text fontFamily={"Montserrat"}>Setting</Text>
                       </MenuItem>
@@ -249,8 +267,7 @@ function Navbar({}) {
                 </Menu>
               </Flex>
             )}
-
-            {!profile && (
+            {profile === "no default" && (
               <Button
                 leftIcon={<LensLogo size={30} color="white" />}
                 iconSpacing={["marginTop"]}
@@ -265,19 +282,27 @@ function Navbar({}) {
                   top: "-2px",
                   boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
                 }}
-                onClick={async () => {
-                  const profileId = await createProfile(data?.address, signer);
-                  console.log(profileId);
-                  // const profileId = "0x0438";
-                  await setDefaultProfile(profileId, data?.address, signer);
-                  const pData = await getDefaultProfile(data?.address);
-                  setProfile(pData);
-                  setUserProfile(pData.defaultProfile);
-                }}
+                onClick={onOpen}
+                // onClick={async () => {
+                //   // setChecker(true);
+                //   // const profileId = await createProfile(data?.address, profilehandle);
+                //   // console.log(profileId);
+                //   // await setDefaultProfile(profileId, data?.address, signer);
+                //   // const pData = await getDefaultProfile(data?.address);
+                //   // setProfile(pData);
+                //   // setUserProfile(pData.defaultProfile);
+                //   // setChecker(false);
+                // }}
               >
                 Create Profile
               </Button>
             )}
+            <CreateProfile
+              isOpen={isOpen}
+              onClose={onClose}
+              setUserProfile={setUserProfile}
+              setProfile={setProfile}
+            />
           </Flex>
         </Flex>
       </Box>

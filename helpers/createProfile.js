@@ -28,13 +28,13 @@ const createProfileRequest = (createProfileRequest) => {
   });
 };
 
-export const createProfile = async (address, signer) => {
+export const createProfile = async (address, profileHandle) => {
   console.log("create profile: address", address);
 
-  await login(address, signer);
+  await login(address);
 
   const createProfileResult = await createProfileRequest({
-    handle: "lukkaGang",
+    handle: profileHandle,
   });
 
   prettyJSON("create profile: result", createProfileResult.data);
@@ -69,5 +69,5 @@ export const createProfile = async (address, signer) => {
   console.log("profile id", BigNumber.from(profileId).toHexString());
 
   //   return result.data, profileId;
-  return profileId;
+  return BigNumber.from(profileId).toHexString();
 };

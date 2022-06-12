@@ -14,6 +14,7 @@ import { createClient, Provider } from "urql";
 import Loading from "./components/Loading";
 import Navbar from "./components/Navbar";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 const client = createClient({
   url: "https://api-mumbai.lens.dev/",
@@ -42,6 +43,23 @@ function MyApp({ Component, pageProps }) {
             <SignerContext.Provider value={{ wallet, setWallet }}>
               <ProfileContext.Provider value={{ userProfile, setUserProfile }}>
                 <LoadingContext.Provider value={{ loading, setLoading }}>
+                  <Head>
+                    <html lang="en" />
+                    <meta charSet="utf-8" />
+                    <meta
+                      name="viewport"
+                      content="width=device-width, initial-scale=1.0"
+                    />
+                    <title>BlockHash</title>
+                    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+                    <meta name="theme-color" content="#1111" />
+                    <meta name="author" content="Lakshay Maini" />
+                    <link
+                      rel="shortcut icon"
+                      type="image/gif"
+                      href="/logo.gif"
+                    />
+                  </Head>
                   <Loading />
                   <Box className={loading ? "blur" : null}>
                     {router.asPath !== "/" && <Navbar />}

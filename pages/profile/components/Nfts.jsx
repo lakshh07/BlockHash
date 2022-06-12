@@ -74,6 +74,7 @@ function Nfts({ nfts }) {
       ) : (
         <Flex
           mt="5em"
+          ml={"-20%"}
           justifyContent="center"
           flexDir="column"
           alignItems="center"

@@ -23,7 +23,8 @@ import { MdVerified } from "react-icons/md";
 import { HiOutlineClipboardCopy } from "react-icons/hi";
 import { TbMessages, TbDots } from "react-icons/tb";
 import moment from "moment";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../../../utils/axios";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -34,7 +35,9 @@ function Blogs({ publications }) {
   const toast = useToast();
 
   function fetchContent(url) {
-    axios(url, { crossdomain: true })
+    axios(url, {
+      crossdomain: true,
+    })
       .then((response) => {
         // console.log(response.data);
         setContent(response.data);
@@ -57,6 +60,7 @@ function Blogs({ publications }) {
     return (
       <Flex
         mt="5em"
+        ml={"-20%"}
         justifyContent="center"
         flexDir="column"
         alignItems="center"
@@ -73,43 +77,49 @@ function Blogs({ publications }) {
     return publications.map((list, index) => {
       return (
         <Box key={index} mb={"20px"}>
-          <Flex>
-            <Image
-              src={
-                list.profile?.picture
-                  ? list.profile?.picture?.original?.url
-                  : `/assets/man.png`
-              }
-              height={45}
-              width={45}
-              style={{ borderRadius: "50%" }}
-            />
-            <Box ml={"20px"}>
-              <Flex alignItems={"center"}>
+          <Link href={`/profile/${list?.profile?.handle}`}>
+            <Flex h={"45px"}>
+              <Image
+                src={
+                  list.profile?.picture
+                    ? list.profile?.picture?.original?.url
+                    : `/assets/man.png`
+                }
+                height={45}
+                width={45}
+                style={{ borderRadius: "50%" }}
+              />
+              <Box ml={"20px"}>
                 <Flex alignItems={"center"}>
-                  <Text
-                    fontWeight={600}
-                    textTransform={"capitalize"}
-                    fontSize={"16px"}
-                  >
-                    {list.profile?.name ? list.profile?.name : "Anonymous"}
+                  <Flex alignItems={"center"}>
+                    <Text
+                      fontWeight={600}
+                      textTransform={"capitalize"}
+                      fontSize={"16px"}
+                      mb={"0px"}
+                    >
+                      {list.profile?.name ? list.profile?.name : "Anonymous"}
+                    </Text>
+                    <MdVerified
+                      style={{ marginLeft: "5px" }}
+                      color={"#8B5CF6"}
+                    />
+                    <AiFillSafetyCertificate
+                      style={{ marginLeft: "5px" }}
+                      color={"#11B981"}
+                    />
+                  </Flex>
+                  <BsDot color={"grey"} />
+                  <Text mb={"0px"} fontSize={"14px"} color={"grey"}>
+                    {moment(new Date(list.createdAt)).format("MMMM DD YYYY")}
                   </Text>
-                  <MdVerified style={{ marginLeft: "5px" }} color={"#8B5CF6"} />
-                  <AiFillSafetyCertificate
-                    style={{ marginLeft: "5px" }}
-                    color={"#11B981"}
-                  />
                 </Flex>
-                <BsDot color={"grey"} />
-                <Text fontSize={"14px"} color={"grey"}>
-                  {moment(new Date(list.createdAt)).fromNow()}
+                <Text fontSize={"14px"} className={"brand"}>
+                  {`@${list.profile?.handle}`}
                 </Text>
-              </Flex>
-              <Text fontSize={"14px"} className={"brand"}>
-                {`@${list.profile?.handle}`}
-              </Text>
-            </Box>
-          </Flex>
+              </Box>
+            </Flex>
+          </Link>
           <Flex
             mt="25px"
             justifyContent={"space-between"}
@@ -162,7 +172,7 @@ function Blogs({ publications }) {
                     fontSize={"16px"}
                     mr={"20px"}
                   >
-                    3
+                    {list?.stats?.totalAmountOfComments}
                   </Button>
                   <Button
                     color="purple.700"
@@ -172,9 +182,9 @@ function Blogs({ publications }) {
                     fontSize={"16px"}
                     mr={"20px"}
                   >
-                    3
+                    {list?.stats?.totalAmountOfMirrors}
                   </Button>
-                  <Menu>
+                  <Menu autoSelect={false}>
                     <MenuButton>
                       <IconButton
                         ml={"10px"}

@@ -31,6 +31,7 @@ const mdParser = new MarkdownIt(/* Markdown-it options */);
 function NewBlog() {
   const router = useRouter();
   const [image, setImage] = useState(null);
+  const [checker, setChecker] = useState(false);
   const [blogData, setBlogData] = useState({
     title: "",
     subtitle: "",
@@ -85,6 +86,7 @@ function NewBlog() {
   }
 
   async function publish() {
+    setChecker(true);
     toast({
       title: "Publishing your blog",
       status: "info",
@@ -112,6 +114,7 @@ function NewBlog() {
     );
 
     console.log("result", result);
+    setChecker(false);
     toast({
       title: "Success",
       description: "Blog posted to BlockHash!",
@@ -169,6 +172,7 @@ function NewBlog() {
                 router.back();
                 setLoading(true);
               }}
+              isDisabled={checker}
             >
               Cancel
             </Button>
@@ -183,6 +187,7 @@ function NewBlog() {
                 boxShadow: "rgba(0, 0, 0, 0.1) 0px 5px 15px",
               }}
               onClick={publish}
+              isLoading={checker}
             >
               Publish
             </Button>

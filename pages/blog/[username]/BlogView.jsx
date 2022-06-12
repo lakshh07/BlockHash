@@ -33,6 +33,7 @@ import DOMPurify from "isomorphic-dompurify";
 import { useAccount } from "wagmi";
 import { deletePublication } from "../../../helpers/deleteBlog";
 import Comments from "../../components/Comments";
+import Head from "next/head";
 
 function BlogView() {
   const router = useRouter();
@@ -81,6 +82,9 @@ function BlogView() {
 
   return (
     <>
+      {/* <Head>
+        <title>{`Blog by (@${result?.data?.publication?.profile?.handle}) · BlockHash`}</title>
+      </Head> */}
       <Box py={"2em"} pb={"5em"} mx={"auto"} bg={"rgb(252,252,252)"}>
         <Box justifyContent={"center"} align={"center"} mx={"auto"}>
           {result?.data?.publication?.metadata?.media[0] && (
@@ -192,11 +196,20 @@ function BlogView() {
                     _hover={{ backgroundColor: "transparent" }}
                     _focus={{ border: "none" }}
                     leftIcon={<AiOutlineEdit />}
+                    onClick={() => {
+                      toast({
+                        title: "Comming Soon!",
+                        status: "info",
+                        duration: 5000,
+                        isClosable: false,
+                        position: "top",
+                      });
+                    }}
                   >
                     Edit
                   </Button>
 
-                  <Menu>
+                  <Menu autoSelect={false}>
                     <MenuButton
                       _hover={{
                         padding: "2px 0 2px 0",
@@ -222,7 +235,18 @@ function BlogView() {
                       </Button>
                     </MenuButton>
                     <MenuList>
-                      <MenuItem icon={<AiOutlineEdit color="#0177FF" />}>
+                      <MenuItem
+                        onClick={() => {
+                          toast({
+                            title: "Comming Soon!",
+                            status: "info",
+                            duration: 5000,
+                            isClosable: false,
+                            position: "top",
+                          });
+                        }}
+                        icon={<AiOutlineEdit color="#0177FF" />}
+                      >
                         Edit
                       </MenuItem>
                       <MenuItem
@@ -293,7 +317,7 @@ function BlogView() {
         </Flex>
 
         <Box maxW={"1000px"} mx={"auto"} mt={"5em"}>
-          <Comments result={result} />
+          <Comments pubData={result} />
         </Box>
       </Box>
     </>

@@ -38,11 +38,13 @@ import { follow } from "../../helpers/follow";
 import { approveFollow } from "../../helpers/approveFollow";
 import { unfollow } from "../../helpers/unfollow";
 import { useAccount, useSigner } from "wagmi";
+import Head from "next/head";
 
 function ProfileView(props) {
   const [profile, setProfile] = useState([]);
   const [dprofile, setDProfile] = useState([]);
   const [publications, setPublications] = useState([]);
+  const [commentsArray, setCommentsArray] = useState([]);
   const router = useRouter();
   const { username } = router.query;
   const { setLoading } = useLoadingContext();
@@ -92,7 +94,14 @@ function ProfileView(props) {
       const newPub = pubs.data.publications.items.filter((list) => {
         return list.metadata.content !== "This publication has been hidden";
       });
-      setPublications(newPub);
+      const commentArray = newPub.filter((list) => {
+        return list.__typename === "Comment";
+      });
+      const postArray = newPub.filter((list) => {
+        return list.__typename === "Post";
+      });
+      setPublications(postArray);
+      setCommentsArray(commentArray);
     } catch (err) {
       console.log("error fetching profile...", err);
     }
@@ -121,6 +130,18 @@ function ProfileView(props) {
 
   return (
     <>
+      <Head>
+        {profile?.name ? (
+          <title>{`${profile?.name ? profile?.name : "Anonymous"} (@${
+            profile?.handle
+          }) · BlockHash`}</title>
+        ) : (
+          <title>{`@${profile?.handle} · BlockHash`}</title>
+        )}
+        {profile?.bio && (
+          <meta name="description" content={`${profile?.bio}`} key="desc" />
+        )}
+      </Head>
       <Box mb={"5em"}>
         <Box
           bg={"white"}
@@ -137,7 +158,7 @@ function ProfileView(props) {
           backgroundSize={profile?.coverPicture ? "cover" : "30%"}
         ></Box>
         <Container maxW={"1250px"}>
-          <Grid templateColumns={"1fr 2.2fr"}>
+          <Grid templateColumns={"1fr 4fr"}>
             <GridItem>
               <Box
                 mt={"-6rem"}
@@ -321,7 +342,11 @@ function ProfileView(props) {
               </Box>
             </GridItem>
             <GridItem ml="6em">
-              <ProfileData profile={profile} publications={publications} />
+              <ProfileData
+                profile={profile}
+                commentsArray={commentsArray}
+                publications={publications}
+              />
             </GridItem>
           </Grid>
         </Container>

@@ -9,7 +9,7 @@ import Nfts from "./components/Nfts";
 import { getUsersNfts } from "../api";
 import { useQuery } from "urql";
 
-function ProfileData({ publications, profile }) {
+function ProfileData({ publications, profile, commentsArray }) {
   const [result] = useQuery({
     query: getUsersNfts,
     variables: {
@@ -31,7 +31,7 @@ function ProfileData({ publications, profile }) {
             </Tab>
             <Tab fontWeight="600" _focus={{ border: "none" }} mx={"10px"}>
               <TbMessages style={{ marginRight: "7px", fontWeight: "600" }} />
-              Comments (19)
+              Comments ({commentsArray?.length})
             </Tab>
             <Tab fontWeight="600" _focus={{ border: "none" }}>
               <AiOutlinePicture
@@ -46,7 +46,7 @@ function ProfileData({ publications, profile }) {
               <Blogs publications={publications} />
             </TabPanel>
             <TabPanel>
-              <Comments />
+              <Comments commentsArray={commentsArray} />
             </TabPanel>
             <TabPanel>
               <Nfts nfts={result} />

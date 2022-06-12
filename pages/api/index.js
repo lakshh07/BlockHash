@@ -35,6 +35,7 @@ export {
   recommendProfiles,
   getProfiles,
   getProfileByHandle,
+  getProfileById,
   getPublications,
   getPublication,
   searchProfiles,
@@ -44,6 +45,7 @@ export {
   getChallenge,
   getUsersNfts,
   getDefaultProfile,
+  getComments,
 } from "./queries";
 
 export {

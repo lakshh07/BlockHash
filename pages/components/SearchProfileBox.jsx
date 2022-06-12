@@ -45,6 +45,7 @@ function SearchProfileBox({ query }) {
           position={"absolute"}
           // h={"auto"}
           w={"130%"}
+          zIndex={"99"}
           p={"1em"}
           bg={"white"}
           border={"1px solid #E4E4E7"}
@@ -59,7 +60,7 @@ function SearchProfileBox({ query }) {
           ) : result ? (
             result?.data?.search?.items?.map((list, index) => {
               return (
-                <Link key={index} href="/">
+                <Link key={index} href={`/profile/${list?.handle}`}>
                   <Box
                     borderRadius={"10px"}
                     p={"1em"}

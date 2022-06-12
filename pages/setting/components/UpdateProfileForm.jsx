@@ -1,29 +1,35 @@
 import {
   Box,
   Button,
-  Container,
   Flex,
   FormControl,
   FormLabel,
-  Grid,
-  GridItem,
   Image,
   Input,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Text,
   VisuallyHidden,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
+import { useAccount, useSigner } from "wagmi";
+import { uploadIpfs } from "../../../helpers/ipfs";
+import { setProfileImageUriNormal } from "../../../helpers/updateProfilePicture";
+import { setProfileMetadata } from "../../../helpers/updateProfileMetadata";
 
-function UpdateProfileForm() {
+function UpdateProfileForm({ dp }) {
   const [cover, setCover] = useState(null);
   const [avatar, setAvatar] = useState(null);
+  const [checker, setChecker] = useState(false);
+  const [profileData, setProfileData] = useState({
+    name: "",
+    bio: "",
+    twitterHandle: "",
+    websiteUrl: "",
+  });
   const coverRef = useRef(null);
   const avatarRef = useRef(null);
+  const { data } = useAccount();
+  const { data: signer } = useSigner();
+  const toast = useToast();
 
   function triggerOnChangeCover() {
     coverRef.current.click();
@@ -43,6 +49,62 @@ function UpdateProfileForm() {
     setAvatar(uploadedFile);
   }
 
+  function onChange(e) {
+    setProfileData(() => ({ ...profileData, [e.target.name]: e.target.value }));
+  }
+
+  async function uploadAvatar() {
+    setChecker(true);
+    const pictureURL = await uploadIpfs(avatar);
+    const fullAvatarURL = `https://ipfs.infura.io/ipfs/${pictureURL?.path}`;
+
+    const hash = await setProfileImageUriNormal(
+      dp?.id,
+      data?.address,
+      signer,
+      fullAvatarURL
+    );
+
+    hash &&
+      toast({
+        title: "Profile picture updated!",
+        description: "wait for few minutes for indexing.",
+        status: "success",
+        duration: 5000,
+        isClosable: false,
+        position: "top",
+      });
+    hash && setChecker(false);
+  }
+  async function updateMetadata() {
+    setChecker(true);
+
+    const coverURL = await uploadIpfs(cover);
+    const fullCoverURL = `https://ipfs.infura.io/ipfs/${coverURL?.path}`;
+
+    const hash = await setProfileMetadata(
+      dp?.id,
+      data?.address,
+      signer,
+      profileData.name,
+      profileData.bio,
+      fullCoverURL,
+      profileData.twitterHandle,
+      profileData.websiteUrl
+    );
+
+    hash &&
+      toast({
+        title: "Profile metadata updated!",
+        description: "wait for few minutes for indexing.",
+        status: "success",
+        duration: 5000,
+        isClosable: false,
+        position: "top",
+      });
+    hash && setChecker(false);
+  }
+
   return (
     <div>
       <Box
@@ -60,35 +122,43 @@ function UpdateProfileForm() {
             isDisabled
             id="first-name"
             variant={"filled"}
-            placeholder="0x0437"
+            placeholder={dp?.id}
           />
         </FormControl>
         <FormControl mb={"1em"}>
           <FormLabel fontFamily={"Montserrat"} htmlFor="first-name">
             Name
           </FormLabel>
-          <Input id="first-name" variant={"outline"} placeholder="name" />
+          <Input
+            variant={"outline"}
+            name="name"
+            value={profileData.name}
+            onChange={onChange}
+            placeholder={dp?.name ? dp?.name : "Anonymous"}
+          />
         </FormControl>
         <FormControl mb={"1.5em"}>
           <FormLabel fontFamily={"Montserrat"} htmlFor="first-name">
             Bio
           </FormLabel>
-          <Input id="first-name" variant={"outline"} placeholder="bio" />
-        </FormControl>
-        <FormControl mb={"1.5em"}>
-          <FormLabel fontFamily={"Montserrat"} htmlFor="first-name">
-            Location
-          </FormLabel>
-          <Input id="first-name" variant={"outline"} placeholder="location" />
+          <Input
+            variant={"outline"}
+            placeholder={dp?.bio ? dp?.bio : "Lets GTFOL"}
+            name="bio"
+            value={profileData.bio}
+            onChange={onChange}
+          />
         </FormControl>
         <FormControl mb={"1.5em"}>
           <FormLabel fontFamily={"Montserrat"} htmlFor="first-name">
             Website
           </FormLabel>
           <Input
-            id="first-name"
+            name="websiteUrl"
+            value={profileData.websiteUrl}
+            onChange={onChange}
             variant={"outline"}
-            placeholder="website url"
+            placeholder="https://abc.xyz"
           />
         </FormControl>
         <FormControl mb={"1.5em"}>
@@ -96,26 +166,41 @@ function UpdateProfileForm() {
             Twitter
           </FormLabel>
           <Input
-            id="first-name"
+            name="twitterHandle"
+            value={profileData.twitterHandle}
+            onChange={onChange}
             variant={"outline"}
-            placeholder="twitter url"
+            placeholder="abc"
           />
         </FormControl>
         <FormControl mb={"1.5em"}>
           <FormLabel mb={"1em"} fontFamily={"Montserrat"} htmlFor="first-name">
             Cover
           </FormLabel>
-          {cover && (
-            <Image
-              src={URL.createObjectURL(cover)}
-              height={"260px"}
-              width={"full"}
-              style={{
-                margin: "1em auto",
-                borderRadius: "10px",
-              }}
-            />
-          )}
+
+          <Box
+            bg={"white"}
+            w={"100%"}
+            h={"260px"}
+            mb={"1.5em"}
+            backgroundImage={
+              dp?.coverPicture
+                ? dp?.coverPicture?.original?.url
+                : cover
+                ? URL.createObjectURL(cover)
+                : "/assets/bright-squares.png"
+            }
+            backgroundPosition={"center"}
+            backgroundColor="#662EA7"
+            borderRadius={"10px"}
+            backgroundRepeat={
+              dp?.coverPicture ? "no-repeat" : cover ? "no-repeat" : "repeat"
+            }
+            backgroundSize={
+              dp?.coverPicture ? "cover" : cover ? "cover" : "30%"
+            }
+          ></Box>
+
           <Box>
             <Flex alignItems={"baseline"}>
               <Button
@@ -128,7 +213,11 @@ function UpdateProfileForm() {
                 mb={"1em"}
                 fontSize={"14px"}
               >
-                {cover ? `Change Cover` : `Set Cover`}
+                {dp?.coverPicture
+                  ? `Change Cover`
+                  : cover
+                  ? `Change Cover`
+                  : `Set Cover`}
               </Button>
             </Flex>
 
@@ -147,6 +236,8 @@ function UpdateProfileForm() {
             color={"rgb(1, 119, 255)"}
             border={"1px solid rgb(1, 119, 255)"}
             bg={"transparent"}
+            onClick={updateMetadata}
+            isLoading={checker}
           >
             Save
           </Button>
@@ -164,16 +255,23 @@ function UpdateProfileForm() {
           <FormLabel mb={"1em"} fontFamily={"Montserrat"} htmlFor="first-name">
             Avatar
           </FormLabel>
-          {avatar && (
-            <Image
-              src={URL.createObjectURL(avatar)}
-              height={"240px"}
-              width={"240px"}
-              style={{
-                borderRadius: "10px",
-              }}
-            />
-          )}
+
+          <Image
+            src={
+              dp?.picture
+                ? dp?.picture?.original?.url
+                : avatar
+                ? URL.createObjectURL(avatar)
+                : `/assets/man.png`
+            }
+            height={"240px"}
+            width={"240px"}
+            style={{
+              borderRadius: "10px",
+              marginBottom: "1.5em",
+            }}
+          />
+
           <Box>
             <Flex alignItems={"baseline"}>
               <Button
@@ -186,7 +284,11 @@ function UpdateProfileForm() {
                 rounded="20px"
                 mb={"1em"}
               >
-                {avatar ? `Change Avatar` : `Set Avatar`}
+                {dp?.picture
+                  ? `Change Avatar`
+                  : avatar
+                  ? `Change Avatar`
+                  : `Set Avatar`}
               </Button>
             </Flex>
 
@@ -205,6 +307,8 @@ function UpdateProfileForm() {
             color={"rgb(1, 119, 255)"}
             border={"1px solid rgb(1, 119, 255)"}
             bg={"transparent"}
+            onClick={uploadAvatar}
+            isLoading={checker}
           >
             Save
           </Button>
