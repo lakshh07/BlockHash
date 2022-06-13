@@ -23,7 +23,7 @@ import { HiOutlineClipboardCopy } from "react-icons/hi";
 import { TbMessages, TbDots } from "react-icons/tb";
 import moment from "moment";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { GetContent, GetTags } from "./GetContent";
+import GetContent, { GetTags } from "./GetContent";
 
 function Blogs({ publications }) {
   const toast = useToast();

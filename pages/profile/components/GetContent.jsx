@@ -21,7 +21,7 @@ async function fetchContent(url, setData) {
     });
 }
 
-export function GetContent({ url }) {
+export default function GetContent({ url }) {
   const [data, setData] = useState();
 
   useEffect(() => {
