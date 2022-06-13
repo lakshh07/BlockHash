@@ -10,7 +10,6 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Tag,
   Text,
   useToast,
 } from "@chakra-ui/react";
@@ -23,38 +22,11 @@ import { MdVerified } from "react-icons/md";
 import { HiOutlineClipboardCopy } from "react-icons/hi";
 import { TbMessages, TbDots } from "react-icons/tb";
 import moment from "moment";
-// import axios from "axios";
-import axios from "../../../utils/axios";
-import parse from "html-react-parser";
-import DOMPurify from "dompurify";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { GetContent, GetTags } from "./GetContent";
 
 function Blogs({ publications }) {
-  const [data, setData] = useState(true);
-  const [content, setContent] = useState();
   const toast = useToast();
-
-  function fetchContent(url) {
-    axios(url, {
-      crossdomain: true,
-    })
-      .then((response) => {
-        // console.log(response.data);
-        setContent(response.data);
-        return response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  const htmlFrom = (htmlString) => {
-    const cleanHtmlString = DOMPurify.sanitize(htmlString, {
-      USE_PROFILES: { html: true },
-    });
-    const html = parse(cleanHtmlString);
-    return html;
-  };
 
   if (publications?.length == "0") {
     return (
@@ -139,27 +111,11 @@ function Blogs({ publications }) {
                   fontWeight={400}
                   fontSize={"16px"}
                 >
-                  {list.metadata.content && fetchContent(list.metadata.content)}
-                  {content?.description
-                    ? `${htmlFrom(content?.description?.substring(0, 200))}....`
-                    : `${htmlFrom(content?.content?.substring(0, 200))}...`}
+                  <GetContent url={list.metadata.content} />
                 </Text>
               </Link>
               <Flex mt={"20px"} justifyContent={"flex-start"} w={"500px"}>
-                {content?.tags.map((tagList, index) => {
-                  return (
-                    <Tag
-                      mr={"10px"}
-                      fontSize={"14px"}
-                      key={index}
-                      color={"blackAlpha.700"}
-                      textTransform="lowercase"
-                      cursor={"pointer"}
-                    >
-                      {`#${tagList}`}
-                    </Tag>
-                  );
-                })}
+                <GetTags url={list.metadata.content} />
               </Flex>
 
               <Box mt="20px" ml="20px">
@@ -234,7 +190,6 @@ function Blogs({ publications }) {
 
           {publications?.length === index + 1 ? null : <Divider my={"20px"} />}
         </Box>
-        // </Link>
       );
     });
   }
