@@ -116,22 +116,25 @@ function Navbar({}) {
 
               <SearchProfileBox query={query} />
             </Box>
-            <Button
-              ml={"30px"}
-              variant={"ghost"}
-              fontWeight={500}
-              _hover={{
-                filter: "drop-shadow(rgba(1, 119, 255, 0.4) 0px 5px 3px)",
-                textDecor: "underline",
-              }}
-              onClick={() => {
-                setLoading(true);
-                router.push("/feed");
-                setLoading(true);
-              }}
-            >
-              Explore
-            </Button>
+
+            {router.asPath !== "/feed" && (
+              <Button
+                ml={"30px"}
+                variant={"ghost"}
+                fontWeight={500}
+                _hover={{
+                  filter: "drop-shadow(rgba(1, 119, 255, 0.4) 0px 5px 3px)",
+                  textDecor: "underline",
+                }}
+                onClick={() => {
+                  setLoading(true);
+                  router.push("/feed");
+                  setLoading(true);
+                }}
+              >
+                Explore
+              </Button>
+            )}
           </Flex>
 
           <Flex alignItems={"center"}>

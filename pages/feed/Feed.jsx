@@ -8,6 +8,11 @@ import {
   IconButton,
   Text,
   Link,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
   Icon,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
@@ -16,6 +21,7 @@ import { MdVerified } from "react-icons/md";
 import { GiElectric } from "react-icons/gi";
 import { FaRegNewspaper } from "react-icons/fa";
 import Blogs from "../profile/components/Blogs";
+import Timeline from "../profile/components/Timeline";
 import { BsDot } from "react-icons/bs";
 import { useAccount, useSigner } from "wagmi";
 import { useSignerContext } from "../../context/signer";
@@ -24,6 +30,7 @@ import { useLoadingContext } from "../../context/loading";
 import { basicClient, explorePublications } from "../api";
 import UseAnimations from "react-useanimations";
 import arrowUp from "react-useanimations/lib/arrowUp";
+import { CgFeed } from "react-icons/cg";
 
 export default function Feed(props) {
   const [pub, setPub] = useState([]);
@@ -59,22 +66,48 @@ export default function Feed(props) {
         <Container mx={"auto"} maxW={"1350"}>
           <Grid templateColumns={"2.4fr 1fr"} pb={"3em"}>
             <GridItem mt={"2rem"}>
-              <Flex alignItems={"center"} ml={"1em"}>
-                <FaRegNewspaper fontSize={"18px"} />
-                <Heading ml={"5px"} fontWeight={500} fontSize={"18px"}>
-                  Latest Blogs
-                </Heading>
-              </Flex>
+              <Tabs variant={"soft-rounded"}>
+                <TabList>
+                  <Tab borderRadius={"10px"} _focus={{ border: "none" }}>
+                    <Flex alignItems={"center"}>
+                      <FaRegNewspaper fontSize={"18px"} />
+                      <Heading ml={"5px"} fontWeight={500} fontSize={"18px"}>
+                        Latest Blogs
+                      </Heading>
+                    </Flex>
+                  </Tab>
 
-              <Box
-                bg={"white"}
-                mt="1rem"
-                borderRadius={"10px"}
-                border={"1px solid #E4E4E7"}
-                p={"2em 2em 0 2em"}
-              >
-                <Blogs publications={pub} />
-              </Box>
+                  <Tab
+                    borderRadius={"10px"}
+                    _focus={{ border: "none" }}
+                    ml={"1em"}
+                  >
+                    <Flex alignItems={"center"}>
+                      <CgFeed fontSize={"18px"} />
+                      <Heading ml={"5px"} fontWeight={500} fontSize={"18px"}>
+                        Timeline
+                      </Heading>
+                    </Flex>
+                  </Tab>
+                </TabList>
+
+                <TabPanels mt={"25px"}>
+                  <TabPanel p={"0"}>
+                    <Box
+                      bg={"white"}
+                      mt="1rem"
+                      borderRadius={"10px"}
+                      border={"1px solid #E4E4E7"}
+                      p={"2em 2em 0 2em"}
+                    >
+                      <Blogs publications={pub} />
+                    </Box>
+                  </TabPanel>
+                  <TabPanel>
+                    <Timeline />
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
             </GridItem>
             <GridItem mt={"4.3rem"} ml={"2em"}>
               <Box

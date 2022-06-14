@@ -297,7 +297,7 @@ function ProfileView(props) {
                   ) : (
                     <Button
                       leftIcon={<AiOutlineUserAdd />}
-                      my={"1.5em"}
+                      mt={"1.5em"}
                       color={"rgb(1, 119, 255)"}
                       border={"1px solid rgb(1, 119, 255)"}
                       bg={"transparent"}
@@ -309,12 +309,12 @@ function ProfileView(props) {
                 </Box>
 
                 {profile?.bio && (
-                  <Text mb={"2em"} fontSize={"16px"}>
+                  <Text mt={"1.5em"} fontSize={"16px"}>
                     {profile?.bio}
                   </Text>
                 )}
 
-                <Divider mb={"2em"} w={"85%"} />
+                <Divider mt={"1.5em"} mb={"2em"} w={"85%"} />
 
                 <Stack fontSize={"16px"}>
                   <Flex alignItems={"center"}>
