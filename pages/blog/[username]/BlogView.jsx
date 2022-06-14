@@ -109,6 +109,7 @@ function BlogView() {
             mt={"1em"}
             fontSize={"46px"}
             fontWeight={600}
+            color={"#111827"}
             fontFamily={"Montserrat"}
             textAlign={"center"}
           >
@@ -116,7 +117,7 @@ function BlogView() {
           </Heading>
           <Heading
             w={"55%"}
-            mt={"1em"}
+            mt={"0.5em"}
             fontFamily={"Montserrat"}
             fontSize={"28px"}
             fontWeight={400}
@@ -129,12 +130,7 @@ function BlogView() {
             {content?.subtitle && content?.subtitle}
           </Heading>
 
-          <Flex
-            justifyContent={"center"}
-            mt={"2.5em"}
-            alignItems={"center"}
-            // w={"23%"}
-          >
+          <Flex justifyContent={"center"} mt={"2.5em"} alignItems={"center"}>
             <Image
               src={
                 result?.data?.publication?.profile?.picture
@@ -145,7 +141,7 @@ function BlogView() {
               width={45}
               style={{ borderRadius: "50%" }}
             />
-            <Box ml={"10px"}>
+            <Box ml={"15px"}>
               <Flex alignItems={"center"}>
                 <Flex alignItems={"center"}>
                   <Text
@@ -165,14 +161,17 @@ function BlogView() {
                   />
                 </Flex>
               </Flex>
-              <Text
+              {/* <Text
+                fontWeight={900}
                 flex={1}
+                minW={"160px"}
+                zIndex={"99"}
                 textAlign={"left"}
                 fontSize={"14px"}
                 className={"brand"}
               >
                 {`@${result?.data?.publication?.profile?.handle}`}
-              </Text>
+              </Text> */}
             </Box>
             <BsDot style={{ marginRight: "0.5em", marginLeft: "0.5em" }} />
             <Text fontSize={"16px"} color={"blackAlpha.800"}>

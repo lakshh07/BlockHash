@@ -81,8 +81,8 @@ h2 {
 .blogContent p {
   display: block;
   margin-top: 1em;
-  margin-bottom: 1em;
-  font-size: 18px;
+  margin-bottom: 1em !important;
+  font-size: 20px;
   margin-left: 0;
   margin-right: 0;
   font-family: "Montserrat" !important;
@@ -90,7 +90,7 @@ h2 {
 
 .blogContent h1 {
   display: block;
-  font-size: 2em;
+  font-size: 2.4em;
   margin-top: 0.67em;
   margin-bottom: 0.67em;
   margin-left: 0;
@@ -100,7 +100,7 @@ h2 {
 }
 .blogContent h2 {
   display: block;
-  font-size: 1.5em;
+  font-size: 1.8em;
   margin-top: 0.83em;
   margin-bottom: 0.83em;
   margin-left: 0;
@@ -166,10 +166,11 @@ h2 {
   background: rgb(245, 245, 245);
   margin-top: 2em;
   border-left: 10px solid #e4e7eb;
-  margin-bottom: 1em;
+  margin-bottom: 2em;
   margin-left: 40px;
   margin-right: 40px;
   padding: 0.1em 10px;
+  align-items: center;
 }
 .blogContent code {
   border-radius: 0.25rem;
@@ -177,9 +178,19 @@ h2 {
   padding: 0.25rem;
   --tw-text-opacity: 1;
   color: rgba(0, 0, 0, var(--tw-text-opacity));
-  font-size: 80%;
+  font-size: 90%;
   background: #f0efed;
 }
+.blogContent img {
+  margin: 2em auto;
+}
+.blogContent hr {
+  margin: 2em auto;
+}
+.blogContent a {
+  text-decoration: underline !important;
+}
+
 .ant-select-dropdown {
   display: none !important;
 }
