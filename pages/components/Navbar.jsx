@@ -75,7 +75,7 @@ function Navbar({}) {
     setQuery(e.target.value);
   }
 
-  if (router.asPath == `/blog/new-blog/${userProfile?.id}`) {
+  if (router.pathname == "/blog/new-blog/[id]") {
     return null;
   }
 
@@ -286,15 +286,6 @@ function Navbar({}) {
                   boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
                 }}
                 onClick={onOpen}
-                // onClick={async () => {
-                //   // setChecker(true);
-                //   // const profileId = await createProfile(data?.address, profilehandle);
-                //   // console.log(profileId);
-                //   // await setDefaultProfile(profileId, data?.address, signer);
-                //   // const pData = await getDefaultProfile(data?.address);
-                //   // setProfile(pData);
-                //   // setUserProfile(pData.defaultProfile);
-                //   // setChecker(false);
                 // }}
               >
                 Create Profile
