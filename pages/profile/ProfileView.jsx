@@ -46,6 +46,7 @@ function ProfileView(props) {
   const [dprofile, setDProfile] = useState([]);
   const [publications, setPublications] = useState([]);
   const [commentsArray, setCommentsArray] = useState([]);
+  const [mirrorArray, setMirrorArray] = useState([]);
   const router = useRouter();
   const { username } = router.query;
   const { setLoading } = useLoadingContext();
@@ -101,8 +102,12 @@ function ProfileView(props) {
       const postArray = newPub.filter((list) => {
         return list.__typename === "Post";
       });
+      const mirrorArray = newPub.filter((list) => {
+        return list.__typename === "Mirror";
+      });
       setPublications(postArray);
       setCommentsArray(commentArray);
+      setMirrorArray(mirrorArray);
     } catch (err) {
       console.log("error fetching profile...", err);
     }
@@ -361,6 +366,7 @@ function ProfileView(props) {
                 profile={profile}
                 commentsArray={commentsArray}
                 publications={publications}
+                mirrorArray={mirrorArray}
               />
             </GridItem>
           </Grid>

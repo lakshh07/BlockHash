@@ -25,31 +25,11 @@ import moment from "moment";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import GetContent, { GetTags } from "./GetContent";
 import { staff, verified } from "../../../utils/recognition";
-import { createMirror } from "../../../helpers/mirror";
-import { useAccount, useSigner } from "wagmi";
 
-function Blogs({ publications }) {
+function Mirror({ mirrorArray }) {
   const toast = useToast();
-  const { data } = useAccount();
-  const { data: signer } = useSigner();
-  const [checker, setChecker] = useState(false);
-
-  async function doMirror(profileId, pubId) {
-    setChecker(true);
-    const result = await createMirror("0x0438", data?.address, signer, pubId);
-    result && setChecker(false);
-    result &&
-      toast({
-        title: "Success",
-        description: "Blog Mirrored. Wait for indexing",
-        status: "success",
-        duration: 4000,
-        isClosable: false,
-        position: "top",
-      });
-  }
-
-  if (publications?.length == "0") {
+  console.log(mirrorArray);
+  if (mirrorArray?.length == "0") {
     return (
       <Flex
         mt="5em"
@@ -60,22 +40,50 @@ function Blogs({ publications }) {
       >
         <Image src={"/assets/no-results.png"} height={100} width={100} />
         <Heading fontSize="1.5em" fontFamily={"Miriam Libre"} pt="1em">
-          No Blogs
+          No Mirrors
         </Heading>
       </Flex>
     );
   }
 
-  if (publications) {
-    return publications.map((list, index) => {
+  if (mirrorArray) {
+    return mirrorArray.map((list, index) => {
       return (
         <Box key={index} mb={"20px"}>
-          <Link href={`/profile/${list?.profile?.handle}`}>
+          <Flex mb={"1.5em"} color={" rgb(113,113,122)"} alignItems={"center"}>
+            <CgArrowsExchangeAlt fontSize={"18px"} />
+
+            <Text
+              ml={"5px"}
+              fontWeight={500}
+              fontFamily={"Montserrat"}
+              fontSize={"14px"}
+            >
+              <strong>
+                <Link href={`/profile/${list?.profile?.handle}`}>
+                  {list?.profile?.name
+                    ? list?.profile?.name
+                    : list?.profile?.handle}
+                </Link>
+              </strong>
+              &nbsp;mirrored the&nbsp;
+              <strong>
+                <Link
+                  isExternal
+                  href={`/blog/${list?.profile?.handle}/${list?.id}`}
+                >
+                  blog
+                </Link>
+              </strong>
+            </Text>
+          </Flex>
+
+          <Link href={`/profile/${list?.mirrorOf?.profile?.handle}`}>
             <Flex h={"45px"}>
               <Image
                 src={
-                  list.profile?.picture
-                    ? list.profile?.picture?.original?.url
+                  list.mirrorOf?.profile?.picture
+                    ? list.mirrorOf?.profile?.picture?.original?.url
                     : `/assets/man.png`
                 }
                 height={45}
@@ -91,16 +99,18 @@ function Blogs({ publications }) {
                       fontSize={"16px"}
                       mb={"0px"}
                     >
-                      {list.profile?.name ? list.profile?.name : "Anonymous"}
+                      {list.mirrorOf?.profile?.name
+                        ? list.mirrorOf?.profile?.name
+                        : "Anonymous"}
                     </Text>
 
-                    {verified.includes(list.profile?.handle) && (
+                    {verified.includes(list.mirrorOf?.profile?.handle) && (
                       <MdVerified
                         style={{ marginLeft: "5px" }}
                         color={"#8B5CF6"}
                       />
                     )}
-                    {staff.includes(list.profile?.handle) && (
+                    {staff.includes(list.mirrorOf?.profile?.handle) && (
                       <AiFillSafetyCertificate
                         style={{ marginLeft: "5px" }}
                         color={"#11B981"}
@@ -109,11 +119,13 @@ function Blogs({ publications }) {
                   </Flex>
                   <BsDot color={"grey"} />
                   <Text mb={"0px"} fontSize={"14px"} color={"grey"}>
-                    {moment(new Date(list.createdAt)).format("MMMM DD YYYY")}
+                    {moment(new Date(list.mirrorOf?.createdAt)).format(
+                      "MMMM DD YYYY"
+                    )}
                   </Text>
                 </Flex>
                 <Text fontSize={"14px"} className={"brand"}>
-                  {`@${list.profile?.handle}`}
+                  {`@${list.mirrorOf?.profile?.handle}`}
                 </Text>
               </Box>
             </Flex>
@@ -125,11 +137,11 @@ function Blogs({ publications }) {
           >
             <Box w={"550px"}>
               <Link
-                href={`/blog/${list?.profile?.handle}/${list.id}`}
+                href={`/blog/${list?.mirrorOf?.profile?.handle}/${list.mirrorOf?.id}`}
                 isExternal
               >
                 <Heading fontWeight={700} fontSize={"20px"}>
-                  {list.metadata.description}
+                  {list.mirrorOf?.metadata.description}
                 </Heading>
                 <Text
                   mt="10px"
@@ -137,11 +149,11 @@ function Blogs({ publications }) {
                   fontWeight={400}
                   fontSize={"16px"}
                 >
-                  <GetContent url={list.metadata.content} />
+                  <GetContent url={list.mirrorOf?.metadata.content} />
                 </Text>
               </Link>
               <Flex mt={"20px"} justifyContent={"flex-start"} w={"500px"}>
-                <GetTags url={list.metadata.content} />
+                <GetTags url={list.mirrorOf?.metadata.content} />
               </Flex>
 
               <Box mt="20px" ml="20px">
@@ -154,7 +166,7 @@ function Blogs({ publications }) {
                     fontSize={"16px"}
                     mr={"20px"}
                   >
-                    {list?.stats?.totalAmountOfComments}
+                    {list?.mirrorOf?.stats?.totalAmountOfComments}
                   </Button>
                   <Button
                     color="purple.700"
@@ -163,10 +175,8 @@ function Blogs({ publications }) {
                     fontWeight={500}
                     fontSize={"16px"}
                     mr={"20px"}
-                    isLoading={checker}
-                    onClick={() => doMirror(list?.profile?.id, list.id)}
                   >
-                    {list?.stats?.totalAmountOfMirrors}
+                    {list?.mirrorOf?.stats?.totalAmountOfMirrors}
                   </Button>
                   <Menu autoSelect={false}>
                     <MenuButton>
@@ -179,7 +189,7 @@ function Blogs({ publications }) {
                     </MenuButton>
                     <MenuList>
                       <CopyToClipboard
-                        text={`${process.env.NEXT_PUBLIC_URL}/blog/${list?.profile?.handle}/${list.id}`}
+                        text={`${process.env.NEXT_PUBLIC_URL}/blog/${list?.mirrorOf?.profile?.handle}/${list.mirrorOf?.id}`}
                         onCopy={() =>
                           toast({
                             title: "Copied 👍🏻",
@@ -208,7 +218,8 @@ function Blogs({ publications }) {
               ml={"25px"}
               borderRadius={"5px"}
               backgroundImage={
-                list.metadata.media[0] && list.metadata.media[0].original.url
+                list.mirrorOf?.metadata.media[0] &&
+                list.mirrorOf?.metadata.media[0].original.url
               }
               backgroundPosition={"center"}
               backgroundRepeat={"no-repeat"}
@@ -216,11 +227,11 @@ function Blogs({ publications }) {
             ></Box>
           </Flex>
 
-          {publications?.length === index + 1 ? null : <Divider my={"20px"} />}
+          {mirrorArray?.length === index + 1 ? null : <Divider my={"20px"} />}
         </Box>
       );
     });
   }
 }
 
-export default Blogs;
+export default Mirror;

@@ -57,8 +57,10 @@ export default function Feed(props) {
     const newPub = pubs.data.explorePublications.items.filter((list) => {
       return list.metadata.content !== "This publication has been hidden";
     });
-    setPub(newPub);
-    console.log(pubs);
+    const finalPub = newPub.filter((list) => {
+      return list.__typename === "Post";
+    });
+    setPub(finalPub);
   }
 
   return (

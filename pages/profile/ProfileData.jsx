@@ -8,8 +8,10 @@ import Comments from "./components/Comments";
 import Nfts from "./components/Nfts";
 import { getUsersNfts } from "../api";
 import { useQuery } from "urql";
+import { CgArrowsExchangeAlt } from "react-icons/cg";
+import Mirror from "./components/Mirror";
 
-function ProfileData({ publications, profile, commentsArray }) {
+function ProfileData({ publications, profile, commentsArray, mirrorArray }) {
   const [result] = useQuery({
     query: getUsersNfts,
     variables: {
@@ -33,6 +35,12 @@ function ProfileData({ publications, profile, commentsArray }) {
               <TbMessages style={{ marginRight: "7px", fontWeight: "600" }} />
               Comments ({commentsArray?.length})
             </Tab>
+            <Tab fontWeight="600" _focus={{ border: "none" }} mx={"10px"}>
+              <CgArrowsExchangeAlt
+                style={{ marginRight: "7px", fontWeight: "600" }}
+              />
+              Mirrors ({mirrorArray?.length})
+            </Tab>
             <Tab fontWeight="600" _focus={{ border: "none" }}>
               <AiOutlinePicture
                 style={{ marginRight: "7px", fontWeight: "600" }}
@@ -47,6 +55,9 @@ function ProfileData({ publications, profile, commentsArray }) {
             </TabPanel>
             <TabPanel>
               <Comments commentsArray={commentsArray} />
+            </TabPanel>
+            <TabPanel>
+              <Mirror mirrorArray={mirrorArray} />
             </TabPanel>
             <TabPanel>
               <Nfts nfts={result} />

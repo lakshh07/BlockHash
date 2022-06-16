@@ -1,7 +1,14 @@
 import { Flex, Heading, Image } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
+import { getTimeline } from "../../../helpers/getTimeline";
 
 function Timeline() {
+  const fetchData = async () => {
+    const result = await getTimeline("0x0438");
+    console.log(result);
+  };
+  // fetchData();
+  useEffect(() => {}, []);
   return (
     <Flex
       mt="5em"
