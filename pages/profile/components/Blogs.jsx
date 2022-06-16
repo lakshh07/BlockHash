@@ -24,6 +24,7 @@ import { TbMessages, TbDots } from "react-icons/tb";
 import moment from "moment";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import GetContent, { GetTags } from "./GetContent";
+import { staff, verified } from "../../../utils/recognition";
 
 function Blogs({ publications }) {
   const toast = useToast();
@@ -61,7 +62,7 @@ function Blogs({ publications }) {
                 width={45}
                 style={{ borderRadius: "50%" }}
               />
-              <Box ml={"20px"}>
+              <Box ml={"20px"} flex={1}>
                 <Flex alignItems={"center"}>
                   <Flex alignItems={"center"}>
                     <Text
@@ -72,14 +73,19 @@ function Blogs({ publications }) {
                     >
                       {list.profile?.name ? list.profile?.name : "Anonymous"}
                     </Text>
-                    <MdVerified
-                      style={{ marginLeft: "5px" }}
-                      color={"#8B5CF6"}
-                    />
-                    <AiFillSafetyCertificate
-                      style={{ marginLeft: "5px" }}
-                      color={"#11B981"}
-                    />
+
+                    {verified.includes(list.profile?.handle) && (
+                      <MdVerified
+                        style={{ marginLeft: "5px" }}
+                        color={"#8B5CF6"}
+                      />
+                    )}
+                    {staff.includes(list.profile?.handle) && (
+                      <AiFillSafetyCertificate
+                        style={{ marginLeft: "5px" }}
+                        color={"#11B981"}
+                      />
+                    )}
                   </Flex>
                   <BsDot color={"grey"} />
                   <Text mb={"0px"} fontSize={"14px"} color={"grey"}>

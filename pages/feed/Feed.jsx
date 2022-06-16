@@ -31,6 +31,7 @@ import { basicClient, explorePublications } from "../api";
 import UseAnimations from "react-useanimations";
 import arrowUp from "react-useanimations/lib/arrowUp";
 import { CgFeed } from "react-icons/cg";
+import { staff, verified } from "../../utils/recognition";
 
 export default function Feed(props) {
   const [pub, setPub] = useState([]);
@@ -182,14 +183,19 @@ export default function Feed(props) {
                                     >
                                       {list.name}
                                     </Text>
-                                    <MdVerified
-                                      style={{ marginLeft: "5px" }}
-                                      color={"#8B5CF6"}
-                                    />
-                                    <AiFillSafetyCertificate
-                                      style={{ marginLeft: "5px" }}
-                                      color={"#11B981"}
-                                    />
+
+                                    {verified.includes(list.handle) && (
+                                      <MdVerified
+                                        style={{ marginLeft: "5px" }}
+                                        color={"#8B5CF6"}
+                                      />
+                                    )}
+                                    {staff.includes(list.handle) && (
+                                      <AiFillSafetyCertificate
+                                        style={{ marginLeft: "5px" }}
+                                        color={"#11B981"}
+                                      />
+                                    )}
                                   </Flex>
                                 </Flex>
                                 <Text fontSize={"13px"} className={"brand"}>

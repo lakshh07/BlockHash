@@ -34,6 +34,7 @@ import { useAccount } from "wagmi";
 import { deletePublication } from "../../../helpers/deleteBlog";
 import Comments from "../../components/Comments";
 import Head from "next/head";
+import { staff, verified } from "../../../utils/recognition";
 
 function BlogView() {
   const router = useRouter();
@@ -154,11 +155,22 @@ function BlogView() {
                       ? result?.data?.publication?.profile?.name
                       : "Anonymous"}
                   </Text>
-                  <MdVerified style={{ marginLeft: "5px" }} color={"#8B5CF6"} />
-                  <AiFillSafetyCertificate
-                    style={{ marginLeft: "5px" }}
-                    color={"#11B981"}
-                  />
+                  {verified.includes(
+                    result?.data?.publication?.profile?.handle
+                  ) && (
+                    <MdVerified
+                      style={{ marginLeft: "5px" }}
+                      color={"#8B5CF6"}
+                    />
+                  )}
+                  {staff.includes(
+                    result?.data?.publication?.profile?.handle
+                  ) && (
+                    <AiFillSafetyCertificate
+                      style={{ marginLeft: "5px" }}
+                      color={"#11B981"}
+                    />
+                  )}
                 </Flex>
               </Flex>
               {/* <Text

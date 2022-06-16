@@ -39,6 +39,7 @@ import { approveFollow } from "../../helpers/approveFollow";
 import { unfollow } from "../../helpers/unfollow";
 import { useAccount, useSigner } from "wagmi";
 import Head from "next/head";
+import { verified, staff } from "../../utils/recognition";
 
 function ProfileView(props) {
   const [profile, setProfile] = useState([]);
@@ -200,34 +201,39 @@ function ProfileView(props) {
                     {profile?.name ? profile?.name : "Anonymous"}
                   </Heading>
 
-                  <Tooltip
-                    hasArrow
-                    placement={"right"}
-                    label="Verified"
-                    borderRadius={"4px"}
-                  >
-                    <Box>
-                      <MdVerified
-                        style={{ marginLeft: "10px" }}
-                        fontSize={"20px"}
-                        color={"#8B5CF6"}
-                      />
-                    </Box>
-                  </Tooltip>
-                  <Tooltip
-                    hasArrow
-                    label="Staff"
-                    placement={"right"}
-                    borderRadius={"4px"}
-                  >
-                    <Box>
-                      <AiFillSafetyCertificate
-                        style={{ marginLeft: "10px" }}
-                        fontSize={"20px"}
-                        color={"#11B981"}
-                      />
-                    </Box>
-                  </Tooltip>
+                  {verified.includes(profile?.handle) && (
+                    <Tooltip
+                      hasArrow
+                      placement={"right"}
+                      label="Verified"
+                      borderRadius={"4px"}
+                    >
+                      <Box>
+                        <MdVerified
+                          style={{ marginLeft: "10px" }}
+                          fontSize={"20px"}
+                          color={"#8B5CF6"}
+                        />
+                      </Box>
+                    </Tooltip>
+                  )}
+
+                  {staff.includes(profile?.handle) && (
+                    <Tooltip
+                      hasArrow
+                      label="Staff"
+                      placement={"right"}
+                      borderRadius={"4px"}
+                    >
+                      <Box>
+                        <AiFillSafetyCertificate
+                          style={{ marginLeft: "10px" }}
+                          fontSize={"20px"}
+                          color={"#11B981"}
+                        />
+                      </Box>
+                    </Tooltip>
+                  )}
                 </Flex>
 
                 <Text

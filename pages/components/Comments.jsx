@@ -18,13 +18,15 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { TbBrandTelegram } from "react-icons/tb";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiFillSafetyCertificate, AiOutlinePlus } from "react-icons/ai";
 import moment from "moment";
 import { createComment } from "../../helpers/comment";
 import { useAccount, useSigner } from "wagmi";
 import { getComments } from "../api";
 import { useQuery } from "urql";
 import { useProfileContext } from "../../context/profile";
+import { staff, verified } from "../../utils/recognition";
+import { MdVerified } from "react-icons/md";
 
 function Comments({ pubData }) {
   const [content, setContent] = useState("");
@@ -199,16 +201,31 @@ function Comments({ pubData }) {
                       style={{ borderRadius: "50%" }}
                     />
                     <Box ml={"10px"} w={"300px"}>
-                      <Text
-                        fontWeight={600}
-                        textTransform={"capitalize"}
-                        fontSize={"16px"}
-                        textAlign={"left"}
-                      >
-                        {list?.profile?.name
-                          ? list?.profile?.name
-                          : "Anonymous"}
-                      </Text>
+                      <Flex alignItems={"center"}>
+                        <Text
+                          fontWeight={600}
+                          textTransform={"capitalize"}
+                          fontSize={"16px"}
+                          textAlign={"left"}
+                        >
+                          {list?.profile?.name
+                            ? list?.profile?.name
+                            : "Anonymous"}
+                        </Text>
+                        {verified.includes(list?.profile?.handle) && (
+                          <MdVerified
+                            style={{ marginLeft: "5px" }}
+                            color={"#8B5CF6"}
+                          />
+                        )}
+                        {staff.includes(list?.profile?.handle) && (
+                          <AiFillSafetyCertificate
+                            style={{ marginLeft: "5px" }}
+                            color={"#11B981"}
+                          />
+                        )}
+                      </Flex>
+
                       <Text
                         textAlign={"left"}
                         fontSize={"14px"}

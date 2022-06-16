@@ -6,6 +6,7 @@ import { BsDot } from "react-icons/bs";
 import { MdVerified } from "react-icons/md";
 import moment from "moment";
 import Blog from "./Blog";
+import { staff, verified } from "../../../utils/recognition";
 
 function Comments({ commentsArray }) {
   return (
@@ -40,14 +41,22 @@ function Comments({ commentsArray }) {
                                 ? list?.mainPost?.profile?.name
                                 : "Anonymous"}
                             </Text>
-                            <MdVerified
-                              style={{ marginLeft: "5px" }}
-                              color={"#8B5CF6"}
-                            />
-                            <AiFillSafetyCertificate
-                              style={{ marginLeft: "5px" }}
-                              color={"#11B981"}
-                            />
+                            {verified.includes(
+                              list?.mainPost?.profile?.handle
+                            ) && (
+                              <MdVerified
+                                style={{ marginLeft: "5px" }}
+                                color={"#8B5CF6"}
+                              />
+                            )}
+                            {staff.includes(
+                              list?.mainPost?.profile?.handle
+                            ) && (
+                              <AiFillSafetyCertificate
+                                style={{ marginLeft: "5px" }}
+                                color={"#11B981"}
+                              />
+                            )}
                           </Flex>
                           <BsDot color={"grey"} />
                           <Text fontSize={"14px"} color={"grey"}>
@@ -109,14 +118,18 @@ function Comments({ commentsArray }) {
                               ? list.profile?.name
                               : "Anonymous"}
                           </Text>
-                          <MdVerified
-                            style={{ marginLeft: "5px" }}
-                            color={"#8B5CF6"}
-                          />
-                          <AiFillSafetyCertificate
-                            style={{ marginLeft: "5px" }}
-                            color={"#11B981"}
-                          />
+                          {verified.includes(list.profile?.handle) && (
+                            <MdVerified
+                              style={{ marginLeft: "5px" }}
+                              color={"#8B5CF6"}
+                            />
+                          )}
+                          {staff.includes(list.profile?.handle) && (
+                            <AiFillSafetyCertificate
+                              style={{ marginLeft: "5px" }}
+                              color={"#11B981"}
+                            />
+                          )}
                         </Flex>
                         <BsDot color={"grey"} />
                         <Text fontSize={"14px"} color={"grey"}>
