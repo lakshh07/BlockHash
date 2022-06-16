@@ -190,6 +190,20 @@ h2 {
 .blogContent a {
   text-decoration: underline !important;
 }
+.blogContent pre {
+  /* color: #e5e7eb; */
+  background: #f0efed;
+  overflow-x: auto;
+  line-height: 1.75;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  border-radius: 0.375rem;
+  font-size: 16px;
+  padding-top: 1em;
+  padding-right: 1.5em;
+  padding-bottom: 1em;
+  padding-left: 1.5em;
+}
 
 .ant-select-dropdown {
   display: none !important;
