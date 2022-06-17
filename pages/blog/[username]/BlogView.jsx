@@ -13,7 +13,7 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   AiFillSafetyCertificate,
   AiOutlineDownCircle,
@@ -43,6 +43,13 @@ function BlogView() {
   const { username, id } = router.query;
   const { data } = useAccount();
   const toast = useToast();
+  const ServicesRef = useRef(null);
+
+  const gotoServices = () =>
+    window.scrollTo({
+      top: ServicesRef.current.offsetTop,
+      behavior: "smooth",
+    });
 
   useEffect(() => {
     if (username && id) {
@@ -327,7 +334,13 @@ function BlogView() {
           })}
         </Flex>
 
-        <Box maxW={"1000px"} mx={"auto"} mt={"5em"}>
+        <Box
+          ref={ServicesRef}
+          maxW={"1000px"}
+          mx={"auto"}
+          id={"comment"}
+          mt={"5em"}
+        >
           <Comments pubData={result} />
         </Box>
       </Box>

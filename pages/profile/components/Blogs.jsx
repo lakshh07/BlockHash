@@ -27,6 +27,7 @@ import GetContent, { GetTags } from "./GetContent";
 import { staff, verified } from "../../../utils/recognition";
 import { createMirror } from "../../../helpers/mirror";
 import { useAccount, useSigner } from "wagmi";
+import { getDefaultProfile } from "../../../helpers/getDefaultProfile";
 
 function Blogs({ publications }) {
   const toast = useToast();
@@ -34,9 +35,15 @@ function Blogs({ publications }) {
   const { data: signer } = useSigner();
   const [checker, setChecker] = useState(false);
 
-  async function doMirror(profileId, pubId) {
+  async function doMirror(pubId) {
     setChecker(true);
-    const result = await createMirror("0x0438", data?.address, signer, pubId);
+    const pData = await getDefaultProfile(data?.address);
+    const result = await createMirror(
+      pData?.defaultProfile?.id,
+      data?.address,
+      signer,
+      pubId
+    );
     result && setChecker(false);
     result &&
       toast({
@@ -164,7 +171,7 @@ function Blogs({ publications }) {
                     fontSize={"16px"}
                     mr={"20px"}
                     isLoading={checker}
-                    onClick={() => doMirror(list?.profile?.id, list.id)}
+                    onClick={() => doMirror(list.id)}
                   >
                     {list?.stats?.totalAmountOfMirrors}
                   </Button>
