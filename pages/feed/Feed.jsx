@@ -75,7 +75,7 @@ export default function Feed(props) {
                     <Flex alignItems={"center"}>
                       <FaRegNewspaper fontSize={"18px"} />
                       <Heading ml={"5px"} fontWeight={500} fontSize={"18px"}>
-                        Latest Blogs
+                        Explore
                       </Heading>
                     </Flex>
                   </Tab>
