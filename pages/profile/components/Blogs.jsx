@@ -28,12 +28,14 @@ import { staff, verified } from "../../../utils/recognition";
 import { createMirror } from "../../../helpers/mirror";
 import { useAccount, useSigner } from "wagmi";
 import { getDefaultProfile } from "../../../helpers/getDefaultProfile";
+import { useRouter } from "next/router";
 
 function Blogs({ publications }) {
   const toast = useToast();
   const { data } = useAccount();
   const { data: signer } = useSigner();
   const [checker, setChecker] = useState(false);
+  const router = useRouter();
 
   async function doMirror(pubId) {
     setChecker(true);
@@ -160,6 +162,14 @@ function Blogs({ publications }) {
                     fontWeight={500}
                     fontSize={"16px"}
                     mr={"20px"}
+                    onClick={() => {
+                      router.push({
+                        pathname: `/blog/${list?.profile?.handle}/${list.id}`,
+                        query: {
+                          type: "comment",
+                        },
+                      });
+                    }}
                   >
                     {list?.stats?.totalAmountOfComments}
                   </Button>

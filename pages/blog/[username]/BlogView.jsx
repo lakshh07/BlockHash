@@ -40,16 +40,19 @@ function BlogView() {
   const router = useRouter();
   const { setLoading } = useLoadingContext();
   const [content, setContent] = useState("");
-  const { username, id } = router.query;
+  const [checker, setChecker] = useState(false);
+  const { username, id, type } = router.query;
   const { data } = useAccount();
   const toast = useToast();
   const ServicesRef = useRef(null);
 
-  const gotoServices = () =>
-    window.scrollTo({
-      top: ServicesRef.current.offsetTop,
-      behavior: "smooth",
-    });
+  useEffect(() => {
+    if (type) {
+      setChecker(true);
+      console.log("trueeee");
+    }
+    checker && document.getElementById("comment").scrollIntoView();
+  }, [type, checker]);
 
   useEffect(() => {
     if (username && id) {
