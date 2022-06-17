@@ -117,7 +117,7 @@ function NewBlog() {
     setChecker(false);
     toast({
       title: "Success",
-      description: "Blog posted to BlockHash!",
+      description: "Blog posted to BlockHash! Wait for indexing",
       status: "success",
       duration: 5000,
       isClosable: false,
@@ -126,7 +126,7 @@ function NewBlog() {
 
     setTimeout(() => {
       router.push("/feed");
-    }, 3000);
+    }, 4000);
   }
 
   return (
