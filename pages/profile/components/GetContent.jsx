@@ -37,7 +37,7 @@ export default function GetContent({ url }) {
   };
 
   if (data?.description) {
-    return <>{`${data?.description?.substring(0, 200)}...`}</>;
+    return <>{`${htmlFrom(data?.description?.substring(0, 200))}...`}</>;
   } else if (data?.content) {
     return <>{`${htmlFrom(data?.content?.substring(0, 200))}...`}</>;
   }
