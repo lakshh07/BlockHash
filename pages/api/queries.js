@@ -1219,7 +1219,8 @@ const explorePublications = `
     explorePublications(request: {
       sortCriteria: LATEST,
       publicationTypes: [POST, MIRROR],
-      sources: ["BlockHash"]
+      sources: ["BlockHash"],
+      timestamp: "2022-06-09T00:00:00.000Z"
     }) {
       items {
         __typename 
