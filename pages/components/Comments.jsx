@@ -1,32 +1,40 @@
 import {
   Accordion,
   AccordionButton,
-  AccordionIcon,
   AccordionItem,
   AccordionPanel,
   Box,
   Button,
   Flex,
-  Heading,
   Image,
-  Input,
   Link,
   Spinner,
   Text,
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
-import { TbBrandTelegram } from "react-icons/tb";
+import React, { useState, useEffect } from "react";
+import { TbBrandTelegram, TbMessages } from "react-icons/tb";
 import { AiFillSafetyCertificate, AiOutlinePlus } from "react-icons/ai";
 import moment from "moment";
 import { createComment } from "../../helpers/comment";
-import { useAccount, useSigner } from "wagmi";
+import {
+  useAccount,
+  useSigner,
+  useContractRead,
+  useContractWrite,
+  useWaitForTransaction,
+} from "wagmi";
 import { getComments } from "../api";
 import { useQuery } from "urql";
 import { useProfileContext } from "../../context/profile";
 import { staff, verified } from "../../utils/recognition";
 import { MdVerified } from "react-icons/md";
+import Clap from "./Clap";
+import { CgArrowsExchangeAlt } from "react-icons/cg";
+import { BlockHashAddress } from "../../utils/contractAddress";
+import BlockHashContract from "../../artifacts/contracts/BlockHash.sol/BlockHash.json";
+import { createMirror } from "../../helpers/mirror";
 
 function Comments({ pubData }) {
   const [content, setContent] = useState("");
@@ -42,7 +50,95 @@ function Comments({ pubData }) {
       request: { commentsOf: pubData?.data?.publication?.id },
     },
   });
-  // console.log(userProfile);
+
+  async function doMirror(pubId) {
+    setChecker(true);
+    // const pData = await getDefaultProfile(data?.address);
+    const result = await createMirror(
+      userProfile?.id,
+      data?.address,
+      signer,
+      pubId
+    );
+    result && setChecker(false);
+    result &&
+      toast({
+        title: "Success",
+        description: "Blog Mirrored. Wait for indexing",
+        status: "success",
+        duration: 4000,
+        isClosable: false,
+        position: "top",
+      });
+  }
+
+  const {
+    data: fetchData,
+    isError: fetchIsError,
+    isFetching,
+  } = useContractRead(
+    {
+      addressOrName: BlockHashAddress,
+      contractInterface: BlockHashContract.abi,
+    },
+    "getClaps",
+    {
+      args: pubData?.data?.publication?.id,
+    },
+    {
+      watch: true,
+    }
+  );
+
+  const {
+    data: clapData,
+    isError: postIsError,
+    isLoading: postIsLoading,
+    isSuccess: postIsSuccess,
+    write,
+  } = useContractWrite(
+    {
+      addressOrName: BlockHashAddress,
+      contractInterface: BlockHashContract.abi,
+    },
+    "doClap",
+    {
+      args: pubData?.data?.publication?.id,
+    }
+  );
+
+  const {
+    data: postCheck,
+    isError,
+    isLoading,
+    isFetched,
+    isSuccess,
+  } = useWaitForTransaction({
+    hash: clapData?.hash,
+  });
+
+  useEffect(() => {
+    isLoading &&
+      toast({
+        title: "Transaction Sent",
+        description: "wait for success",
+        status: "info",
+        duration: 6000,
+        isClosable: true,
+        position: "top",
+      });
+
+    isSuccess &&
+      toast({
+        title: "Transaction Successfull",
+        description: "wait for indexing",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+  }, [isSuccess, isLoading]);
+
   async function postComment() {
     setChecker(true);
     const description = "BlockHash blog comment";
@@ -86,14 +182,48 @@ function Comments({ pubData }) {
               w={"100%"}
               justifyContent={"space-between"}
             >
-              <Heading
-                flex={4}
-                fontFamily={"Montserrat"}
-                fontSize={"24px"}
-                fontWeight={600}
-              >
-                Comments ({result?.data?.publications?.items?.length})
-              </Heading>
+              <Flex alignItems={"center"} flex={4}>
+                <Button
+                  color="purple.700"
+                  variant={"ghost"}
+                  leftIcon={<Clap size={23} color={"#553C9A"} />}
+                  fontWeight={500}
+                  fontSize={"18px"}
+                  mr={"20px"}
+                  fontFamily={"Montserrat"}
+                  isLoading={isFetching}
+                  onClick={() => write()}
+                >
+                  ({fetchData?.length})
+                </Button>
+
+                <Button
+                  color="orange"
+                  variant={"ghost"}
+                  leftIcon={<CgArrowsExchangeAlt fontSize={"25px"} />}
+                  fontWeight={500}
+                  fontSize={"18px"}
+                  mr={"20px"}
+                  isLoading={checker}
+                  fontFamily={"Montserrat"}
+                  onClick={() => doMirror(pubData?.data?.publication?.id)}
+                >
+                  ({pubData?.data?.publication?.stats?.totalAmountOfMirrors})
+                </Button>
+                <Button
+                  color="#0177FF"
+                  variant={"ghost"}
+                  leftIcon={<TbMessages fontSize={"21px"} />}
+                  fontWeight={500}
+                  fontSize={"18px"}
+                  mr={"20px"}
+                  pointerEvents={"none"}
+                  fontFamily={"Montserrat"}
+                >
+                  ({result?.data?.publications?.items?.length})
+                </Button>
+              </Flex>
+
               <AccordionButton
                 p={"0"}
                 _hover={{ backgroundColor: "none" }}

@@ -25,38 +25,10 @@ import moment from "moment";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import GetContent, { GetTags } from "./GetContent";
 import { staff, verified } from "../../../utils/recognition";
-import { createMirror } from "../../../helpers/mirror";
-import { useAccount, useSigner } from "wagmi";
-import { getDefaultProfile } from "../../../helpers/getDefaultProfile";
-import { useRouter } from "next/router";
+import Clap from "../../components/Clap";
 
 function Blogs({ publications }) {
   const toast = useToast();
-  const { data } = useAccount();
-  const { data: signer } = useSigner();
-  const [checker, setChecker] = useState(false);
-  const router = useRouter();
-
-  async function doMirror(pubId) {
-    setChecker(true);
-    const pData = await getDefaultProfile(data?.address);
-    const result = await createMirror(
-      pData?.defaultProfile?.id,
-      data?.address,
-      signer,
-      pubId
-    );
-    result && setChecker(false);
-    result &&
-      toast({
-        title: "Success",
-        description: "Blog Mirrored. Wait for indexing",
-        status: "success",
-        duration: 4000,
-        isClosable: false,
-        position: "top",
-      });
-  }
 
   if (publications?.length == "0") {
     return (
@@ -155,36 +127,34 @@ function Blogs({ publications }) {
 
               <Box mt="20px" ml="20px">
                 <Flex alignItems={"center"}>
-                  <Button
-                    color="#0177FF"
-                    variant={"ghost"}
-                    leftIcon={<TbMessages />}
-                    fontWeight={500}
-                    fontSize={"16px"}
-                    mr={"20px"}
-                    onClick={() => {
-                      router.push({
-                        pathname: `/blog/${list?.profile?.handle}/${list.id}`,
-                        query: {
-                          type: "comment",
-                        },
-                      });
-                    }}
-                  >
-                    {list?.stats?.totalAmountOfComments}
-                  </Button>
-                  <Button
+                  <IconButton
                     color="purple.700"
                     variant={"ghost"}
-                    leftIcon={<CgArrowsExchangeAlt />}
+                    icon={<Clap size={20} color={"#553C9A"} />}
                     fontWeight={500}
                     fontSize={"16px"}
-                    mr={"20px"}
-                    isLoading={checker}
-                    onClick={() => doMirror(list.id)}
-                  >
-                    {list?.stats?.totalAmountOfMirrors}
-                  </Button>
+                    mr={"40px"}
+                    pointerEvents={"none"}
+                  />
+                  <IconButton
+                    color="#0177FF"
+                    variant={"ghost"}
+                    icon={<TbMessages />}
+                    fontWeight={500}
+                    fontSize={"18px"}
+                    mr={"40px"}
+                    pointerEvents={"none"}
+                  />
+                  <IconButton
+                    color="orange"
+                    variant={"ghost"}
+                    icon={<CgArrowsExchangeAlt />}
+                    fontWeight={500}
+                    fontSize={"18px"}
+                    mr={"40px"}
+                    pointerEvents={"none"}
+                  />
+
                   <Menu autoSelect={false}>
                     <MenuButton>
                       <IconButton

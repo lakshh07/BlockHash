@@ -229,7 +229,7 @@ export default function Feed(props) {
               <Flex
                 mt={"1.5em"}
                 position={"sticky"}
-                top={"10px"}
+                top={"12px"}
                 alignItems={"center"}
                 ml={"0.5em"}
               >
