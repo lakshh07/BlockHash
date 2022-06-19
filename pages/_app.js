@@ -54,6 +54,47 @@ function MyApp({ Component, pageProps }) {
                     <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
                     <meta name="theme-color" content="#1111" />
                     <meta name="author" content="Lakshay Maini" />
+                    <meta property="og:title" content="BlockHash" />
+                    <meta property="og:type" content="website" />
+                    <meta
+                      property="og:url"
+                      content="https://blockhash.vercel.app/"
+                    />
+                    <meta property="og:site_name" content="BlockHash" />
+                    <meta
+                      property="og:description"
+                      content="BlockHash is a metaverse blogging platform built with Lens Protocol 🌿"
+                    />
+                    <meta
+                      property="og:image"
+                      content="https://i.ibb.co/5Wscxhr/Screenshot-2022-06-14-at-9-23-09-AM.png"
+                    />
+                    <meta
+                      property="og:image:url"
+                      content="https://i.ibb.co/5Wscxhr/Screenshot-2022-06-14-at-9-23-09-AM.png"
+                    />
+
+                    <meta
+                      property="og:image:secure_url"
+                      content="https://i.ibb.co/5Wscxhr/Screenshot-2022-06-14-at-9-23-09-AM.png"
+                    />
+                    <meta name="twitter:title" content="BlockHash" />
+                    <meta
+                      name="twitter:description"
+                      content="BlockHash is a metaverse blogging platform built with Lens Protocol 🌿"
+                    />
+                    <meta
+                      name="twitter:url"
+                      content="https://blockhash.vercel.app/"
+                    />
+                    <meta
+                      name="twitter:image:src"
+                      content="https://i.ibb.co/5Wscxhr/Screenshot-2022-06-14-at-9-23-09-AM.png"
+                    />
+                    <meta
+                      name="twitter:card"
+                      content="https://i.ibb.co/5Wscxhr/Screenshot-2022-06-14-at-9-23-09-AM.png"
+                    />
                   </Head>
                   <Loading />
                   <Box className={loading ? "blur" : null}>
